@@ -1,0 +1,19 @@
+{
+  "name": "Time-Tracker",
+  "version": "0.0.1",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+    "bootstrap-css": "~3.2.0",
+    "angular" : "1.*",
+    "angular-route": "*",
+    "angular-resource": "*",
+    "angular-storage": "*",
+    "requirejs": "*",
+    "animate-css": "*",
+    "jquery" : "*",
+    "jquery-ui": "*"
+  }
+}

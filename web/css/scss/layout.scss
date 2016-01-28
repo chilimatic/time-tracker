@@ -1,0 +1,26 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+header {
+  padding: 1em 0;
+  background: #146e71;
+  div {
+    &.headline {
+      font-weight: bold;
+      color: #d3d3d3;
+      padding-left: 2em;
+    }
+  }
+}

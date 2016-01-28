@@ -1,0 +1,28 @@
+<?php
+/**
+ *
+ * @author j
+ * Date: 10/22/15
+ * Time: 10:24 PM
+ *
+ * File: ooops.phtml
+ */
+?>
+<html>
+    <head>
+        <title><?php echo _('error'); ?></title>
+        <link rel="stylesheet" type="text/css" href="/css/assets/chilimatic.css" />
+    </head>
+    <body>
+        <div>
+            <h1>Suprender ! .... you have encountered and error</h1>
+            <?php foreach($this->logMessages as $message): ?>
+            <p style="background: #fff; padding: 10px; border-radius: 5px; margin: 10px;">
+                Date: <?php echo $message['date'] ?><br />
+                Error: <?php echo $message['message'] ?><br />
+            </p>
+            <pre style="background: #fff; padding: 10px; border-radius: 5px; margin: 10px;"><?php echo $message['data'] ?></pre>
+            <?php endforeach; ?>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name" : "chilimatic/time-tracker",
+  "description" : "small time-tracker",
+  "version": "0.1.0",
+  "license" : "MIT",
+  "repositories": [
+    {
+      "type": "git",
+      "url" : "git@github.com:chilimatic/chilimatic-framework.git"
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "chilimatic/framework" : "master"
+  },
+  "minimum-stability" : "dev",
+  "autoload": {
+    "psr-4": {
+      "timetracker\\app\\": "app/"
+    }
+  }
+}

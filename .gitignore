@@ -1,0 +1,9 @@
+.idea/*
+vendor/*
+composer*
+app/config
+node_modules/*
+web/vendor/*
+web/js/assets
+web/css/assets
+npm-debug.log
