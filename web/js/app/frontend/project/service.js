@@ -5,13 +5,16 @@ define(['app'], function(app) {
     app
         .factory('project', ['$resource', function($resource) {
             return $resource(
-                '/project/index/:actionName/',
+                '/project/index/:actionName',
                 {
-                    actionName: '@id'
+                    actionName: '@id',
+                    name : '@name'
                 },
                 {
-                    'getList': { method: 'GET' },
-                    'getArticle' : { method: 'GET' }
+                    'getList'   : { method: 'GET'  },
+                    'new'       : { method: 'POST' },
+                    'getDetail' : { method: 'GET'  },
+                    'delete'    : { method: 'POST' }
                 }
             );
         }]);

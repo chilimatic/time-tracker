@@ -1,0 +1,44 @@
+<div ng-controller="projectDetailController" class="container">
+    <div class="row">
+        <a class="btn" href="/project">ProjectList</a>
+        <h1>{{selectedProject.project.name}}</h1>
+        <table id="project-time-table">
+            <tr>
+                <th class="start-col">start</th>
+                <th class="end-col">end</th>
+                <th class="amount-col">amount</th>
+                <th class="option-col">option</th>
+                <th><input class="form-control" placeholder="Search" type="text" ng-model="timeSearch" /></th>
+            </tr>
+            <tr  ng-class="{active : session.id == selectedProject.currentSession.id}"
+                 ng-if="session.startTime"
+                 ng-repeat="session in selectedProject.sessionList | filter : timeSearch"
+            >
+                <td class="tc">
+                    {{::session.startTime}}
+                </td>
+                <td class="tc">
+                    {{session.endTime}}
+                </td>
+                <td class="tr">
+                    {{session.timeDiff}} Minutes
+                </td>
+                <td class="tc">
+                    <span ng-click="resumeSession(session.id)" class="btn btn-info">
+                        <i class="glyphicon glyphicon-time" ></i>
+                    </span>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="result-row">
+                <td></td>
+                <td class="tr">Total:</td>
+                <td class="tr">{{totalAmount}} Hours</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <button class="btn btn-success" ng-click="startNewSession()">Start New Session</button>
+        <button class="btn btn-error" ng-click="endSession()">End Session</button>
+    </div>
+</div>

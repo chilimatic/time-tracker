@@ -16,7 +16,10 @@ class Index extends Application
 {
     public function indexAction(){
         $this->setView(new \chilimatic\lib\view\PHtml());
-        $this->getView()->pageTitle = 'chilimatic';
+        $this->getView()->pageTitle = 'Time-tracker';
     }
 
+    public function notFoundAction(){
+
+    }
 }

@@ -6,22 +6,31 @@ define([], function()
     var PATH_TO_FRONTEND = '/js/app/frontend';
 
     return {
-        defaultRoutePath: '/',
+        defaultRoutePath: '/login',
         routes: {
-            '/': {
+            '/login' : {
+                dependencies: [
+                    PATH_TO_FRONTEND + '/login/directive.js',
+                    PATH_TO_FRONTEND + '/login/service.js',
+                    PATH_TO_FRONTEND + '/login/controller.js'
+                ],
+                templateUrl: PATH_TO_FRONTEND + '/login/index.html'
+            },
+            '/project' : {
                 dependencies: [
                     PATH_TO_FRONTEND + '/project/directive.js',
                     PATH_TO_FRONTEND + '/project/service.js',
                     PATH_TO_FRONTEND + '/project/controller.js'
-
                 ],
                 templateUrl: '/js/app/frontend/project/index.html'
             },
-            '/login' : {
+            '/project/:projectName' : {
                 dependencies: [
-                    '/js/app/control/login.js'
+                    PATH_TO_FRONTEND + '/project/directive.js',
+                    PATH_TO_FRONTEND + '/project/service.js',
+                    PATH_TO_FRONTEND + '/project/controller.js'
                 ],
-                templateUrl: '/js/app/view/login.html'
+                templateUrl: '/js/app/frontend/project/project-detail.html'
             }
         }
     }

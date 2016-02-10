@@ -1,0 +1,14 @@
+<div class="row" ng-controller="loginController">
+    <div class="col-md-4 user-login-container">
+        <h3>Login</h3>
+        <fieldset class="form-group">
+            <label for="login-email">Email:</label>
+            <input ng-model="loginData.email" id="login-email" class="form-control" type="text" value="" placeholder="your e-mail address here" />
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="login-password">Password:</label>
+            <input ng-model="loginData.password" id="login-password" class="form-control" type="password" value="" placeholder="your password here" />
+        </fieldset>
+        <div ng-click="sendLogin()" class="btn btn-success">Login</div>
+    </div>
+</div>

@@ -36,7 +36,7 @@ class User extends Application
     {
         $user = $this->authentification->getUserFromSession();
         if (!$user) {
-            $this->errorMessage('session_invalid', _('Session is invalid'), 'menu.mainMenu.logout()');
+            $this->errorMessage('session_invalid', _('Session is invalid'), null, ['logout' => true]);
             return false;
         }
 
@@ -58,7 +58,7 @@ class User extends Application
             $this->session->delete('user');
         }
 
-        $this->successMessage('logout', _('Logout was successful'), 'menu.mainMenu.logout()');
+        $this->successMessage('logout', _('Logout was successful'));
     }
 
 
@@ -77,12 +77,21 @@ class User extends Application
          * @var \timetracker\app\module\user\service\Authentification $authentificationService
          */
         $authentificationService = ClosureFactory::getInstance()->get('authentication-service', [], true);
-        $user = $authentificationService->getUserByUsernameAndPassword(
-            $request->getRaw()->get('u'),
-            $request->getRaw()->get('p')
+
+        /**
+         * @var \timetracker\app\module\user\model\User $user
+         */
+        $user = $authentificationService->getUserByUsername(
+            $request->getRaw()->get('username')
         );
 
         if (!$user || $user->getId() === null) {
+            $this->errorMessage('login_failed', _('Username or Password invalid!'));
+            return;
+        }
+
+        // the same error so we can find out what happened but the user does not get a hint what part has been faulty
+        if (!password_verify($request->getRaw()->get('password'), $user->getPassword())) {
             $this->errorMessage('login_failed', _('Username or Password invalid!'));
             return;
         }

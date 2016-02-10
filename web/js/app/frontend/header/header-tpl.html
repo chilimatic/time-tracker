@@ -1,6 +1,10 @@
-<header class="header">
-    <div class="headline">
+<header class="header row">
+    <div class="headline col-xs-2">
         Time-tracker
     </div>
-    <div class="logo-headline"></div>
+    <div class="logo-headline col-xs-6"></div>
+    <div class="user-data col-xs-2">{{userData.user.name}}</div>
+    <div class="col-xs-2">
+        <button class="btn" ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</button>
+    </div>
 </header>

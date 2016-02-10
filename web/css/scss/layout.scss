@@ -24,3 +24,30 @@ header {
     }
   }
 }
+
+#project-time-table {
+  width: 100%;
+  th {
+    padding: 1em;
+    text-align: center;
+  }
+  tr {
+    &.result-row {
+      font-weight: bold;
+    }
+    &.active {
+      td {
+        background-color: rgba(193, 250, 195, 0.5);
+      }
+    }
+    td {
+      border-top: 1px double #000;
+      &.tr {
+        text-align: right;
+      }
+      &.tc {
+        text-align: center;
+      }
+    }
+  }
+}

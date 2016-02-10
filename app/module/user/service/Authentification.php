@@ -56,21 +56,20 @@ class Authentification
 
 
     /**
-     * @param $username
-     * @param $password
+     * @param string $username
      *
      * @return null
      */
-    public function getUserByUsernameAndPassword($username, $password){
-        if (!$username || !$password) {
+    public function getUserByUsername($username)
+    {
+        if (!$username) {
             return null;
         }
 
         $em = ClosureFactory::getInstance()->get('entity-manager');
 
         return $em->findOneBy(new \timetracker\app\module\user\model\User(), [
-            'password' => $password,
-            'SHA2(name, 512)' => $username
+            'name' => $username
         ]);
 
     }

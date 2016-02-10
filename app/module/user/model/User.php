@@ -11,10 +11,11 @@ use chilimatic\lib\database\sql\orm\AbstractModel;
 /**
  * Class User
  *
- * @ORM table=time-tracker.user;
+ * @ORM table=`time-tracker`.`user`;
  * @package \app\model
  */
-class User extends AbstractModel{
+class User extends AbstractModel
+{
 
     /**
      * @var int
