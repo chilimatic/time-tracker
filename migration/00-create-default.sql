@@ -6,7 +6,7 @@ CREATE user 'time-tracker'@'localhost' IDENTIFIED BY 'Aef8naelWohGho4lAecu9chaOo
 GRANT SELECT,INSERT, UPDATE, DELETE ON `time-tracker`.* to 'time-tracker'@'localhost';
 
 -- user table
-CREATE TABLE IF NOT EXISTS `time-tracker`.`user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(512) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `time-tracker`.`user` (
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `time-tracker`.`project` (
+CREATE TABLE IF NOT EXISTS `project` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `created` TIMESTAMP NOT NULL,
@@ -28,8 +28,9 @@ CREATE TABLE IF NOT EXISTS `time-tracker`.`session` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT UNSIGNED NULL,
   `project_id` INT UNSIGNED NOT NULL,
-  `start-time` TIMESTAMP NOT NULL,
-  `end-time` TIMESTAMP NULL,
+  `start_time` TIMESTAMP NOT NULL,
+  `end_time` TIMESTAMP NULL,
+  `time_diff` FLOAT UNSIGNED NULL,
   `created` TIMESTAMP NOT NULL,
   `modified` TIMESTAMP NULL,
   PRIMARY KEY (`id`),
@@ -37,12 +38,12 @@ CREATE TABLE IF NOT EXISTS `time-tracker`.`session` (
   INDEX `fk_time-track_2_idx` (`project_id` ASC),
   CONSTRAINT `fk_time-track_1`
   FOREIGN KEY (`user_id`)
-  REFERENCES `time-tracker`.`user` (`id`)
+  REFERENCES `user` (`id`)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
   CONSTRAINT `fk_time-track_2`
   FOREIGN KEY (`project_id`)
-  REFERENCES `time-tracker`.`project` (`id`)
+  REFERENCES `project` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
-  ENGINE = InnoDB
+  ENGINE = InnoDB;
