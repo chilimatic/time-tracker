@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="chilimatic-application" default="build" basedir="." description="Chilimatic admininstration app">
+<project name="time-tracker" default="build" basedir="." description="Time-tracker app">
     <!-- import the different tasks -->
     <import file="phing-build/build-targets/git/pull.xml" />
     <import file="phing-build/build-targets/php/composer.xml" />
@@ -17,19 +17,8 @@
         <phingcall target="php.composer.install.routine" />
     </target>
 
-    <!-- unit tests triggered -->
-    <target name="test">
-        <phpunit haltonerror="true" haltonfailure="true">
-            <batchtest>
-                <fileset dir="test">
-                    <include name="*Test.php"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
-    </target>
-
     <!-- build the package -->
-    <target name="build" depends="test,prepare">
+    <target name="build" depends="prepare">
         <phingcall target="node.bower.install.routine" />
     </target>
 
