@@ -8,8 +8,10 @@ namespace timetracker\app\module\user\controller;
  * Time: 23:04
  */
 
+use chilimatic\lib\database\sql\orm\EntityManager;
 use timetracker\app\module\main\controller\Application;
 use chilimatic\lib\di\ClosureFactory;
+use timetracker\app\module\user\model\User as UserModel;
 
 /**
  * Class User
@@ -79,7 +81,7 @@ class User extends Application
         $authentificationService = ClosureFactory::getInstance()->get('authentication-service', [], true);
 
         /**
-         * @var \timetracker\app\module\user\model\User $user
+         * @var UserModel $user
          */
         $user = $authentificationService->getUserByUsername(
             $request->getRaw()->get('username')
@@ -103,5 +105,49 @@ class User extends Application
 
         $this->session->set('user', $user->getId());
         $this->getView()->response = [ 'user' => $this->user ];
+    }
+
+    public function createAction()
+    {
+        $request = ClosureFactory::getInstance()->get('request-handler', []);
+        if (!$request->getRaw()) {
+            $this->errorMessage('user-create-failed', _('Please enter username and Password!'));
+            return;
+        }
+
+        $username = $request->getRaw()->get('username');
+        $clearTextPassword = $request->getRaw()->get('password');
+
+        if (!$username || !$clearTextPassword) {
+            $this->errorMessage('user-create-failed', _('Please enter username and Password!'));
+            return;
+        }
+
+        /**
+         * @var EntityManager $em
+         */
+        $em = ClosureFactory::getInstance()->get('entity-manager', []);
+        $user = $em->findOneBy(new UserModel(), ['username' => $username]);
+
+        /**
+         * @var UserModel $user
+         */
+        if ($user !== null) {
+            $this->errorMessage('user-already-exists', _('The user already exists!'));
+            return;
+        }
+
+        $userNew = new UserModel();
+        $userNew->setName($username);
+        $userNew->setActive(1);
+        $userNew->setPassword(password_hash($clearTextPassword, PASSWORD_DEFAULT));
+        $userNew->setCreated(date('Y-m-d H:i:s'));
+
+
+        if ($em->persist($userNew)) {
+            $this->successMessage('user-creation-success', _('The user was successfully created!'));
+        } else {
+            $this->errorMessage('user-creation-failed', _('The user could not be created!'));
+        }
     }
 }

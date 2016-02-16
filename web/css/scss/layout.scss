@@ -1,3 +1,7 @@
+@import 'color';
+@import "function";
+@import "mixin";
+
 * {
   margin: 0;
   padding: 0;
@@ -11,19 +15,46 @@ html {
 body {
   height: 100%;
   width: 100%;
+  background-color: $color-primary-0;
+  color: $color-primary-1;
+  text-shadow: 1px 1px 1px #141414;
 }
+
+h1, h2, h3, h4, h5 {
+  text-shadow: 1px 1px 1px #141414;
+  color: $color-primary-1;
+}
+
+.form-control {
+  border: 1px solid $color-primary-1;
+}
+
 
 header {
   padding: 1em 0;
-  background: #146e71;
+  background: $color-primary-4;
   div {
     &.headline {
       font-weight: bold;
-      color: #d3d3d3;
+      color: $color-primary-1;
       padding-left: 2em;
     }
   }
 }
+
+.time-tracker-container {
+  border: 2px solid $color-primary-1;
+  background-color: $color-primary-4;
+  border-radius: 10px;
+  padding: 1em;
+  float: none;
+  margin: 1em auto;
+  ul {
+    list-style-type: none;
+  }
+}
+
+
 
 #project-time-table {
   width: 100%;
@@ -37,11 +68,12 @@ header {
     }
     &.active {
       td {
-        background-color: rgba(193, 250, 195, 0.5);
+        background-color: $color-primary-3;
       }
     }
     td {
-      border-top: 1px double #000;
+      border-top: 1px double $color-primary-1;
+      padding: 0.3em;
       &.tr {
         text-align: right;
       }
@@ -50,4 +82,43 @@ header {
       }
     }
   }
+}
+
+.btn {
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+  }
+  &:active {
+    color: #fff;
+  }
+  &.btn-success {
+    background: $color-secondary-2-0 transparent;
+    border: $color-secondary-2-2;
+  }
+  &.btn-info {
+    background: $color-primary-2;
+    border: none;
+  }
+  &.btn-danger {
+    background: $color-secondary-1-0;
+    border: $color-secondary-1-2;
+  }
+  &.btn-primary {
+    background: $color-primary-0;
+    border: $color-primary-2;
+  }
+  &.btn-secondary {
+    background: $color-primary-0;
+    border: $color-primary-2;
+  }
+  &.btn-warning {
+    background: $color-complement-0;
+    border: $color-complement-2;
+  }
+  &.btn-link {
+
+  }
+
 }

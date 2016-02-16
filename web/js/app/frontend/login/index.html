@@ -1,14 +1,67 @@
-<div class="row" ng-controller="loginController">
-    <div class="col-md-4 user-login-container">
+<div class="row-fluid" ng-controller="loginController">
+    <div class="msg" ng-if="message.message" ng-class="{success: message.type == 'success', error : message.type == 'error'}">
+        {{message.message}}
+    </div>
+    <div class="col-md-4 time-tracker-container" ng-class="{hide: showForm}">
         <h3>Login</h3>
         <fieldset class="form-group">
             <label for="login-email">Email:</label>
-            <input ng-model="loginData.email" id="login-email" class="form-control" type="text" value="" placeholder="your e-mail address here" />
+            <input ng-model="loginData.email" id="login-email" class="form-control" type="text" placeholder="your e-mail address here" />
         </fieldset>
         <fieldset class="form-group">
             <label for="login-password">Password:</label>
-            <input ng-model="loginData.password" id="login-password" class="form-control" type="password" value="" placeholder="your password here" />
+            <input ng-model="loginData.password" id="login-password" class="form-control" type="password" placeholder="your password here" />
         </fieldset>
-        <div ng-click="sendLogin()" class="btn btn-success">Login</div>
+        <div ng-click="sendLogin()" class="btn btn-success">
+            <i class="glyphicon glyphicon-log-in"></i> Login
+        </div>
+        <div ng-click="showCreateForm()" class="btn btn-info">
+            <i class="glyphicon glyphicon-user"></i> Create User
+        </div>
+    </div>
+    <div class="col-md-4 time-tracker-container hide" ng-class="{hide: !showForm}">
+        <h3>Creation</h3>
+        <fieldset class="form-group">
+            <label for="user-create-email">Email:</label>
+            <input ng-model="creationData.email.value" id="user-create-email" class="form-control" type="text" placeholder="your email" />
+            <div ng-if="creationData.email.error">
+                <ul>
+                    <li ng-repeat="error in creationData.email.error">{{error}}</li>
+                </ul>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="user-create-email-verify">Repeat Email:</label>
+            <input ng-model="creationData.verifyEmail.value" id="user-create-email-verify" class="form-control" type="text" placeholder="repeat your email" />
+            <div ng-if="creationData.verifyEmail.error">
+                <ul>
+                    <li ng-repeat="error in creationData.verifyEmail.error">{{::error}}</li>
+                </ul>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="user-create-password">Password:</label>
+            <input ng-model="creationData.password.value" id="user-create-password" class="form-control" type="password" placeholder="your password" />
+            <div class="error" ng-if="creationData.password.error">
+                <ul>
+                    <li ng-repeat="error in creationData.password.error">{{::error}}</li>
+                </ul>
+            </div>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="user-create-password-verify">Repeat Password:</label>
+            <input ng-model="creationData.verifyPassword.value" id="user-create-password-verify" class="form-control" type="password" placeholder="repeat your password" />
+            <div ng-if="creationData.verifyPassword.error">
+                <ul>
+                    <li ng-repeat="error in creationData.verifyPassword.error">{{::error}}</li>
+                </ul>
+            </div>
+        </fieldset>
+        <div ng-click="createUser()" class="btn btn-success">
+            <i class="glyphicon glyphicon-user"></i> Create
+        </div>
+        <div ng-click="showCreateForm()" class="btn btn-danger">
+            <i class="glyphicon glyphicon-remove"></i> Cancel
+        </div>
     </div>
 </div>

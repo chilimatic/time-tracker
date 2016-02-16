@@ -83,7 +83,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
             {
                 'getList'   : { method: 'GET' },
                 'get'       : { method: 'GET' },
-
+                'create'    : { method: 'POST'},
                 'login'     : { method: 'POST' },
                 'loggedIn'  : { method: 'GET' },
                 'logout'    : { method: 'POST'}
