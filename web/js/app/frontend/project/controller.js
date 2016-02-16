@@ -7,8 +7,8 @@ define(['app'], function(app)
     app
         .controller('projectController',
         [
-            '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession',
-            function($scope, $rootScope, $location, project, login, projectSession)
+            '$scope', '$rootScope', '$location', 'project', 'login',
+            function($scope, $rootScope, $location, project, login)
         {
             /**
              *
@@ -132,8 +132,8 @@ define(['app'], function(app)
     );
 
     app.controller('projectDetailController', [
-        '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession',
-        function($scope, $rootScope, $location, project, login, projectSession)
+        '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession', 'task',
+        function($scope, $rootScope, $location, project, login, projectSession, task)
         {
             /**
              * @type {{project: {}, sessionList: Array, currentSession: {}}}
@@ -149,6 +149,12 @@ define(['app'], function(app)
              * @type {number}
              */
             $scope.totalAmount = 0;
+
+            /**
+             *
+             * @type {{}}
+             */
+            $scope.taskList = {};
 
             /**
              *
@@ -248,6 +254,35 @@ define(['app'], function(app)
                 )
             };
 
+
+            $scope.getTaskList = function(projectId)
+            {
+                if (!projectId) {
+                    return;
+                }
+
+                task.getTaskForProject(
+                    {
+                        'actionName' : 'get-task-for-project'
+                    },
+                    {
+                        'project_id' : projectId
+                    },
+                    function(promise) {
+                        if (!promise.response) {
+                            return;
+                        }
+
+                        var data = promise.response.data;
+
+                        if (data) {
+                            $scope.taskList = data;
+                        }
+                    }
+                );
+
+            };
+
             $scope.init = function()
             {
                 login.loggedIn();
@@ -272,6 +307,9 @@ define(['app'], function(app)
                         }
                         var data = promise.response.data;
 
+                        console.log(data.project);
+                        $scope.getTaskList(data.project.id);
+
                         if (data.project) {
                             $scope.selectedProject = data;
 
@@ -291,6 +329,7 @@ define(['app'], function(app)
 
                     }
                 );
+
             };
 
             $scope.init();

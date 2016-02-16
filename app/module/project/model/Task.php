@@ -1,20 +1,14 @@
 <?php
-/**
- * @author  j
- * @created : 2/9/16 10:54 AM
- * @project : time-tracker
- */
-
 namespace timetracker\app\module\project\model;
 use chilimatic\lib\database\sql\orm\AbstractModel;
 
+
 /**
- * Class Project
- *
- * @ORM table=`time-tracker`.`project`;
+ * Class Task
+ * @ORM table=`time-tracker`.`task`;
  * @package timetracker\app\module\project\model
  */
-class Project extends AbstractModel
+class Task extends AbstractModel
 {
     /**
      * @var int
@@ -25,6 +19,11 @@ class Project extends AbstractModel
      * @var string
      */
     private $name;
+
+    /**
+     * @var bool
+     */
+    private $public;
 
     /**
      * @var string
@@ -77,6 +76,26 @@ class Project extends AbstractModel
     }
 
     /**
+     * @return boolean
+     */
+    public function isPublic()
+    {
+        return (bool) $this->public;
+    }
+
+    /**
+     * @param boolean $public
+     *
+     * @return $this
+     */
+    public function setPublic($public)
+    {
+        $this->public = (bool) $public;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getCreated()
@@ -124,8 +143,9 @@ class Project extends AbstractModel
         return [
             'id'        => $this->id,
             'name'      => $this->name,
+            'public'    => (bool) $this->public,
             'created'   => $this->created,
-            'updated'   => $this->modified
+            'modified'  => $this->modified
         ];
     }
 }

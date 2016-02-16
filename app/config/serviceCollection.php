@@ -82,5 +82,27 @@
         },
         'authentication-service' => function($setting = []) {
             return new \timetracker\app\module\user\service\Authentification();
+        },
+        'log' => function($setting = []) {
+            return new \chilimatic\lib\log\client\ToFile(
+                new \chilimatic\lib\formatter\Log()
+            );
+        },
+        'error-log' => function($setting = []) {
+            /**
+             * @var \chilimatic\lib\log\client\ToFile $logger
+             */
+            $logger = \chilimatic\lib\di\ClosureFactory::getInstance()->get('log');
+            $config  = \chilimatic\lib\di\ClosureFactory::getInstance()->get('config');
+
+            $logger->setTargetFile(
+                $config->get('error_log_path')
+                . DIRECTORY_SEPARATOR
+                . "error-"
+                . date('Y-m-d')
+                . ".log"
+            );
+
+            return $logger;
         }
     ];

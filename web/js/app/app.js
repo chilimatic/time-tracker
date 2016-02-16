@@ -414,5 +414,22 @@ define(['route', 'service/resolver'], function(routing, resolver)
     }]);
 
 
+    app
+        .factory('task', ['$resource', function($resource) {
+            return $resource(
+                '/project/task/:actionName',
+                {
+                    actionName: '@id',
+                },
+                {
+                    'getTaskForProject': {method : 'POST'},
+                    'getList'   : { method: 'GET'  },
+                    'create'       : { method: 'POST' },
+                    'delete'    : { method: 'POST' }
+                }
+            );
+        }]);
+
+
     return app;
 });

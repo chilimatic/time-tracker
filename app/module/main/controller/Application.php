@@ -50,8 +50,7 @@ class Application extends HTTPController
         );
 
         $this->authentification = ClosureFactory::getInstance()->get('authentication-service', [], true);
-        $this->loadUserFromSession();
-        parent::__construct();
+        parent::__construct($view);
     }
 
     /**
@@ -113,5 +112,65 @@ class Application extends HTTPController
             'call' => $jsCallback,
             'data' => $data
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param mixed $session
+     *
+     * @return $this
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
+
+        return $this;
+    }
+
+    /**
+     * @return \timetracker\app\module\user\decorator\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param \timetracker\app\module\user\decorator\User $user
+     *
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return \timetracker\app\module\user\service\authentification
+     */
+    public function getAuthentification()
+    {
+        return $this->authentification;
+    }
+
+    /**
+     * @param \timetracker\app\module\user\service\authentification $authentification
+     *
+     * @return $this
+     */
+    public function setAuthentification($authentification)
+    {
+        $this->authentification = $authentification;
+
+        return $this;
     }
 }

@@ -11,6 +11,7 @@ use chilimatic\lib\database\sql\orm\EntityManager;
 use chilimatic\lib\di\ClosureFactory;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\project\model\Project;
+use timetracker\app\module\project\model\UserProjectMap;
 use timetracker\app\module\session\model\Session;
 
 /**
@@ -31,7 +32,14 @@ class Index extends Application
          * @var EntityManager $em
          */
         $em = ClosureFactory::getInstance()->get('entity-manager');
-        $projectList = $em->findBy(new Project(), []);
+
+        $projectMapList = $em->findBy(new UserProjectMap(), ['user_id' => $this->user->getUser()->getId()]);
+        $set = [];
+        foreach ($projectMapList as $project) {
+            $set[] = $project->getProjectId();
+        }
+
+        $projectList = $em->findBy(new Project(), ['id' => $set]);
 
         $this->getView()->response = [ 'projectList' => $projectList ];
     }
@@ -114,13 +122,19 @@ class Index extends Application
         $projectNew->setCreated($dateTime->format('Y-m-d H:i:s'));
         $projectNew->setModified($dateTime->format('Y-m-d H:i:s'));
 
-        if ($em->persist($projectNew)) {
+        if (!$em->persist($projectNew)) {
+            $this->errorMessage('project-creation-failed', _('Project could not be created'));
+        }
+
+        $userProjectMap = new UserProjectMap();
+        $userProjectMap->setProjectId($projectNew->getId());
+        $userProjectMap->setUserId($this->getUser()->getUser()->getId());
+
+        if ($em->persist($userProjectMap)) {
             $this->successMessage('project-created', _('Project successfully created'), null, $projectNew);
         } else {
             $this->errorMessage('project-creation-failed', _('Project could not be created'));
         }
-
-
 
     }
 
