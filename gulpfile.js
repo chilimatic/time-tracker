@@ -5,7 +5,7 @@ process.env.DISABLE_NOTIFIER = true;
  */
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    minifycss = require('gulp-minify-css'),
+    minifycss = require('gulp-cssnano'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
