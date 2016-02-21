@@ -139,6 +139,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
                             } else {
                                 if (login.getUserData() ) {
                                     that.getSession().start();
+                                    $rootScope.$emit('loggedIn');
                                     if ($location.url() == '/login') {
                                         $location.url('/project');
                                     }
@@ -159,6 +160,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
             logIn : function(username, password)
             {
                 if (this.getSession().loggedIn) {
+                    $rootScope.$emit('loggedIn');
                     return true;
                 }
 

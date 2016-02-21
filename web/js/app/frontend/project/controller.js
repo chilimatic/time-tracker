@@ -311,7 +311,6 @@ define(['app'], function(app)
                         }
                         var data = promise.response.data;
 
-                        console.log(data.project);
                         $scope.getTaskList(data.project.id);
 
                         if (data.project) {

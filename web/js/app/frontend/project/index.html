@@ -4,11 +4,14 @@
             <div class="col-xs-4">
                 <h3>Project List</h3>
             </div>
+            <div class="clearfix"></div>
             <ul>
                 <li class="row" ng-repeat="project in projectList">
                     <a class="btn col-xs-4" ng-click="selectProject(project)">{{::project.name}}</a>
                     <div class="col-xs-2">
-                        <a class="btn btn-danger" ng-click="deleteProject(project)"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                        <a class="btn btn-danger" ng-click="deleteProject(project)">
+                            <i class="glyphicon glyphicon-remove-circle"></i>
+                        </a>
                     </div>
                 </li>
             </ul>
