@@ -172,12 +172,20 @@ define(['route', 'service/resolver'], function(routing, resolver)
                         username    : username,
                         password    : password
                     }
-                    ,function(promise) {
+                    ,function(promise)
+                    {
+
+                        $rootScope.$emit(
+                            'login-error',
+                            promise.response.error
+                        );
+
                         if (!promise.response) {
                             return;
                         }
 
                         if (promise.response.error) {
+
                             that.logOut();
                             return;
                         }

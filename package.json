@@ -15,6 +15,7 @@
     "prepublish": ""
   },
   "dependencies": {
+    "es6-promise" : "*",
     "bower": "*",
     "jshint": "*",
     "sass": "*",

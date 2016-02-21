@@ -15,18 +15,20 @@ html {
 body {
   height: 100%;
   width: 100%;
-  background-color: $color-primary-0;
-  color: $color-primary-1;
-  text-shadow: 1px 1px 1px #141414;
+  background-color: $color-primary-4 ;
+  color: #fff;
 }
 
 h1, h2, h3, h4, h5 {
   text-shadow: 1px 1px 1px #141414;
-  color: $color-primary-1;
+  color: #fff;
 }
 
 .form-control {
   border: 1px solid $color-primary-1;
+  input {
+    background-color: $color-primary-3;
+  }
 }
 
 
@@ -36,21 +38,36 @@ header {
   div {
     &.headline {
       font-weight: bold;
-      color: $color-primary-1;
       padding-left: 2em;
     }
   }
 }
 
 .time-tracker-container {
-  border: 2px solid $color-primary-1;
-  background-color: $color-primary-4;
+  background-color: $color-primary-1;
   border-radius: 10px;
-  padding: 1em;
+  padding: 0;
   float: none;
   margin: 1em auto;
+
+  &.display {
+    padding: 1em;
+  }
+
   ul {
     list-style-type: none;
+  }
+  .form-header {
+    padding: 1em;
+    border-bottom: 2px solid $color-primary-0;
+  }
+  .form-body {
+    padding: 1em;
+    background-color: #dfdfdf;
+  }
+  .form-footer {
+    border-top: 2px solid $color-primary-0;
+    padding: 1em;
   }
 }
 
@@ -84,6 +101,25 @@ header {
   }
 }
 
+
+.msg {
+  border-radius: 5px;
+  padding: 1em;
+
+  ul {
+    margin: 0;
+  }
+
+  &.error {
+    background-color: $color-secondary-1-0;
+  }
+
+  &.success {
+    background-color: $color-secondary-2-1;
+    color: #fff;
+  }
+}
+
 .btn {
   color: #fff;
 
@@ -94,8 +130,8 @@ header {
     color: #fff;
   }
   &.btn-success {
-    background: $color-secondary-2-0 transparent;
-    border: $color-secondary-2-2;
+    background: $color-primary-0;
+    border: $color-primary-2;
   }
   &.btn-info {
     background: $color-primary-2;

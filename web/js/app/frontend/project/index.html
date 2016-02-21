@@ -1,33 +1,38 @@
 <div ng-controller="projectController">
-    <div class="time-tracker-container">
-        <div class="col-xs-4">
-            <h3>Project List</h3>
+    <div class="time-tracker-container display">
+        <div class="row">
+            <div class="col-xs-4">
+                <h3>Project List</h3>
+            </div>
+            <ul>
+                <li class="row" ng-repeat="project in projectList">
+                    <a class="btn col-xs-4" ng-click="selectProject(project)">{{::project.name}}</a>
+                    <div class="col-xs-2">
+                        <a class="btn btn-danger" ng-click="deleteProject(project)"><i class="glyphicon glyphicon-remove-circle"></i></a>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <div class="col-xs-4">
-            <a class="btn btn-success" ng-click="showAddProjectForm = !showAddProjectForm">
-                <i class="glyphicon glyphicon-circle-arrow-down"></i> Show Add Project
-            </a>
+        <div class="row">
+            <div class="col-xs-4">
+                <a class="btn btn-success" ng-click="showAddProjectForm = !showAddProjectForm">
+                    <i class="glyphicon glyphicon-book"></i>
+                    Add New Project
+                </a>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="col-lg-5" ng-show="showAddProjectForm">
+                <fieldset class="form-group">
+                    <label for="project-name">Name:</label>
+                    <input ng-model="projectName" id="project-name" class="form-control" type="text" value="" placeholder="Project name here..." />
+                </fieldset>
+                <a class="btn btn-info right" ng-click="addProject()">
+                    <i class="glyphicon glyphicon-floppy-disk"></i>
+                    Create Project
+                </a>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        <div class="clearfix"></div>
-        <div class="col-lg-5" ng-show="showAddProjectForm">
-            <fieldset class="form-group">
-                <label for="project-name">Name:</label>
-                <input ng-model="projectName" id="project-name" class="form-control" type="text" value="" placeholder="Project name here..." />
-            </fieldset>
-            <a class="btn btn-info right" ng-click="addProject()">
-                <i class="glyphicon glyphicon-floppy-disk"></i>
-                Create Project
-            </a>
-        </div>
-        <div class="clearfix"></div>
-        <p></p>
-        <ul>
-            <li class="row" ng-repeat="project in projectList">
-                <a class="btn col-xs-4" ng-click="selectProject(project)">{{::project.name}}</a>
-                <div class="col-xs-2">
-                    <a class="btn btn-danger" ng-click="deleteProject(project)"><i class="glyphicon glyphicon-remove-circle"></i></a>
-                </div>
-            </li>
-        </ul>
     </div>
 </div>

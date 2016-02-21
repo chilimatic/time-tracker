@@ -5,6 +5,7 @@
     <import file="phing-build/build-targets/php/composer.xml" />
     <import file="phing-build/build-targets/node/npm.xml" />
     <import file="phing-build/build-targets/node/bower.xml" />
+    <import file="phing-build/build-targets/node/gulp.xml" />
 
     <!-- property list -->
     <property value="" name="outputValue" />
@@ -20,6 +21,7 @@
     <!-- build the package -->
     <target name="build" depends="prepare">
         <phingcall target="node.bower.install.routine" />
+        <phingcall target="node.npm.install.routine" />
     </target>
 
     <target name="clean">
