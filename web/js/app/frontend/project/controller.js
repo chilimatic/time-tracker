@@ -36,12 +36,16 @@ define(['app'], function(app)
                 $location.url(PROJECT_BASE_URL + '/' + project.name);
             };
 
+            $rootScope.$on('login-error', function(event, param1) {
+                console.log(param1);
+            });
+
             $scope.deleteProject = function(projectModel)
             {
                 if (!projectModel.id) {
                     return;
                 }
-                console.log(projectModel);
+
                 project.delete(
                     {
                         'actionName' : 'delete'
@@ -104,7 +108,7 @@ define(['app'], function(app)
                         'actionName' : 'get-list'
                     },
                     function(promise) {
-                        if (!promise) {
+                        if (!promise.response) {
                             return;
                         }
 
@@ -307,7 +311,6 @@ define(['app'], function(app)
                         }
                         var data = promise.response.data;
 
-                        console.log(data.project);
                         $scope.getTaskList(data.project.id);
 
                         if (data.project) {

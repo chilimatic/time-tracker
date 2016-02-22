@@ -1,53 +1,65 @@
-<div ng-controller="projectDetailController" class="time-tracker-container">
+<div ng-controller="projectDetailController" class="time-tracker-container display">
     <div class="row-fluid">
-        <a class="btn btn-info" href="/project">
-            <i class="glyphicon glyphicon-list"></i>
-            ProjectList
-        </a>
-        <h1>{{selectedProject.project.name}}</h1>
-        <table id="project-time-table">
-            <tr>
-                <th class="start-col">start</th>
-                <th class="end-col">end</th>
-                <th class="amount-col">amount</th>
-                <th class="option-col">option</th>
-                <th><input class="form-control" placeholder="Search" type="text" ng-model="timeSearch" /></th>
-            </tr>
-            <tr  ng-class="{active : session.id == selectedProject.currentSession.id}"
-                 ng-if="session.startTime"
-                 ng-repeat="session in selectedProject.sessionList | filter : timeSearch"
-            >
-                <td class="tc">
-                    {{::session.startTime}}
-                </td>
-                <td class="tc">
-                    {{session.endTime}}
-                </td>
-                <td class="tr">
-                    {{session.timeDiff}} Minutes
-                </td>
-                <td class="tc">
-                    <span ng-click="resumeSession(session.id)" class="btn btn-info">
-                        <i class="glyphicon glyphicon-pencil" ></i>
-                    </span>
-                </td>
-                <td></td>
-            </tr>
-            <tr class="result-row">
-                <td></td>
-                <td class="tr">Total:</td>
-                <td class="tr">{{totalAmount}} Hours</td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-        <button class="btn btn-success" ng-click="startNewSession()">
-            <i class="glyphicon glyphicon-time"></i>
-            Start New Session
-        </button>
-        <button class="btn btn-danger" ng-click="endSession()">
-            <i class="glyphicon glyphicon-stop"></i>
-            End Session
-        </button>
+        <h1>
+            {{selectedProject.project.name}}
+            <a class="btn btn-info pull-right" href="/project">
+                <i class="glyphicon glyphicon-list"></i>
+                ProjectList
+            </a>
+        </h1>
+        <div class="row">
+            <div class="col-lg-3">
+                <input class="form-control" placeholder="Search" type="text" ng-model="timeSearch" />
+            </div>
+        </div>
+        <div
+                ng-class="{active : session.id == selectedProject.currentSession.id}"
+                ng-if="session.startTime"
+                ng-repeat="session in selectedProject.sessionList | filter : timeSearch"
+        >
+            <div ng-click="resumeSession(session)" ng-class="{ selectable: session.endTime == '0000-00-00 00:00:00'}" class="session-list col-lg-8">
+                <div class="col-sm-2">
+                    <i style="font-size: 8em" class="glyphicon glyphicon-time"></i>
+                </div>
+                <div class="col-sm-3 data">
+                    <ul>
+                        <li>
+                            <ul class="col-group">
+                                <li>start:</li>
+                                <li>{{::session.startTime}}</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul class="col-group">
+                                <li>end:</li>
+                                <li>{{session.endTime}}</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul class="col-group">
+                                <li>amount:</li>
+                                <li>{{session.timeDiff}} Minutes</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 task-list">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            Total: {{totalAmount}} Hours
+        </div>
+        <div class="row-fluid">
+            <button class="btn btn-success" ng-click="startNewSession()">
+                <i class="glyphicon glyphicon-time"></i>
+                Start New Session
+            </button>
+            <button class="btn btn-danger" ng-click="endSession()">
+                <i class="glyphicon glyphicon-stop"></i>
+                End Session
+            </button>
+        </div>
     </div>
 </div>

@@ -139,6 +139,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
                             } else {
                                 if (login.getUserData() ) {
                                     that.getSession().start();
+                                    $rootScope.$emit('loggedIn');
                                     if ($location.url() == '/login') {
                                         $location.url('/project');
                                     }
@@ -159,6 +160,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
             logIn : function(username, password)
             {
                 if (this.getSession().loggedIn) {
+                    $rootScope.$emit('loggedIn');
                     return true;
                 }
 
@@ -172,12 +174,20 @@ define(['route', 'service/resolver'], function(routing, resolver)
                         username    : username,
                         password    : password
                     }
-                    ,function(promise) {
+                    ,function(promise)
+                    {
+
+                        $rootScope.$emit(
+                            'login-error',
+                            promise.response.error
+                        );
+
                         if (!promise.response) {
                             return;
                         }
 
                         if (promise.response.error) {
+
                             that.logOut();
                             return;
                         }

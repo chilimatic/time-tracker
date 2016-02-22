@@ -1,3 +1,4 @@
+require('es6-promise').polyfill();
 process.env.DISABLE_NOTIFIER = true;
 
 /**

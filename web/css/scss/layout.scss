@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+
 @import 'color';
 @import "function";
 @import "mixin";
@@ -13,74 +15,127 @@ html {
 }
 
 body {
+  font-family: 'Ubuntu', sans-serif;
+
   height: 100%;
   width: 100%;
-  background-color: $color-primary-0;
-  color: $color-primary-1;
-  text-shadow: 1px 1px 1px #141414;
+  background-color: $color-dark-grey;
+  color: #a3a3a3;
 }
+
+
 
 h1, h2, h3, h4, h5 {
   text-shadow: 1px 1px 1px #141414;
-  color: $color-primary-1;
+  color: #fff;
 }
 
 .form-control {
   border: 1px solid $color-primary-1;
+  background-color: #d0e5f5;
+  color: $color-grey;
+
+
+  &:focus {
+    border-color: $color-primary-1;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px $rgba-primary-1-05;
+    outline: none 0;
+  }
 }
 
 
 header {
   padding: 1em 0;
   background: $color-primary-4;
+  line-height: 2em;
   div {
     &.headline {
       font-weight: bold;
-      color: $color-primary-1;
       padding-left: 2em;
     }
   }
 }
 
 .time-tracker-container {
-  border: 2px solid $color-primary-1;
-  background-color: $color-primary-4;
+  background-color: $color-primary-1;
   border-radius: 10px;
-  padding: 1em;
+  padding: 0;
   float: none;
   margin: 1em auto;
+
+  &.display {
+    padding: 1em;
+  }
+
   ul {
     list-style-type: none;
+    &.col-group {
+      li {
+        display: inline-block;
+      }
+    }
   }
+  .form-header {
+    padding: 1em;
+    border-bottom: 2px solid $color-primary-0;
+  }
+
+  .form-body {
+    padding: 1em;
+    background-color: #dfdfdf;
+  }
+
+  .form-footer {
+    border-top: 2px solid $color-primary-0;
+    padding: 1em;
+  }
+
+  .session-list {
+    padding: 1em;
+    color: $color-primary-0;
+    border-radius: 10px;
+    background-color: #d0e5f5;
+    margin: 1em 0;
+    font-size: 1.2em;
+    &.selectable {
+      &:hover {
+        background-color: #d9eeff;
+        cursor: pointer;
+      }
+    }
+
+
+    .icon {
+      border-right: 1px solid $color-primary-3;
+    }
+    .task-list {
+      border: 2px dashed $color-primary-3;
+      border-radius: 5px;
+      height: 133px;
+    }
+
+    .data {
+      height: 100%;
+    }
+  }
+
 }
 
+.msg {
+  border-radius: 5px;
+  padding: 1em;
 
-
-#project-time-table {
-  width: 100%;
-  th {
-    padding: 1em;
-    text-align: center;
+  ul {
+    margin: 0;
   }
-  tr {
-    &.result-row {
-      font-weight: bold;
-    }
-    &.active {
-      td {
-        background-color: $color-primary-3;
-      }
-    }
-    td {
-      border-top: 1px double $color-primary-1;
-      padding: 0.3em;
-      &.tr {
-        text-align: right;
-      }
-      &.tc {
-        text-align: center;
-      }
-    }
+
+  &.error {
+    background-color: $color-secondary-1-0;
+  }
+
+  &.success {
+    background-color: $color-secondary-2-1;
+    color: #fff;
   }
 }
 
@@ -94,8 +149,8 @@ header {
     color: #fff;
   }
   &.btn-success {
-    background: $color-secondary-2-0 transparent;
-    border: $color-secondary-2-2;
+    background: $color-primary-4;
+    border: $color-primary-2;
   }
   &.btn-info {
     background: $color-primary-2;

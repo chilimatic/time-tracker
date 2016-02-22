@@ -1,10 +1,13 @@
 <header class="header row">
     <div class="headline col-xs-2">
+        <i class="glyphicon glyphicon-time"></i>
         Time-tracker
     </div>
     <div class="logo-headline col-xs-6"></div>
     <div class="user-data col-xs-2">{{userData.user.name}}</div>
     <div class="col-xs-2" ng-if="userData">
-        <button class="btn btn-danger" ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</button>
+        <button class="btn btn-danger" ng-click="logout()">
+            <i class="glyphicon glyphicon-log-out"></i> Logout
+        </button>
     </div>
 </header>
