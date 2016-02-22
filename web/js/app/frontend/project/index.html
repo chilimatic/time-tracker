@@ -1,20 +1,26 @@
 <div ng-controller="projectController">
     <div class="time-tracker-container display">
-        <div class="row">
+        <div>
             <div class="col-xs-4">
-                <h3>Project List</h3>
+                <h2>Project List</h2>
             </div>
             <div class="clearfix"></div>
-            <ul>
-                <li class="row" ng-repeat="project in projectList">
-                    <a class="btn col-xs-4" ng-click="selectProject(project)">{{::project.name}}</a>
-                    <div class="col-xs-2">
-                        <a class="btn btn-danger" ng-click="deleteProject(project)">
-                            <i class="glyphicon glyphicon-remove-circle"></i>
-                        </a>
-                    </div>
-                </li>
-            </ul>
+
+            <div ng-click="selectProject(project)" class="col-lg-5 project" ng-repeat="project in projectList">
+                <div class="project-label col-xs-3">
+                    <i class="glyphicon glyphicon-book"></i>
+                </div>
+                <div class="project-name col-xs-8">
+                    {{::project.name}}
+                </div>
+                <div class="project-option col-xs-1">
+                    <a class="btn btn-danger" ng-click="deleteProject(project)">
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
         </div>
         <div class="row">
             <div class="col-xs-4">

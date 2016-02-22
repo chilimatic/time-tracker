@@ -13,15 +13,16 @@
             </div>
         </div>
         <div
+                class="session"
                 ng-class="{active : session.id == selectedProject.currentSession.id}"
                 ng-if="session.startTime"
                 ng-repeat="session in selectedProject.sessionList | filter : timeSearch"
         >
-            <div ng-click="resumeSession(session)" ng-class="{ selectable: session.endTime == '0000-00-00 00:00:00'}" class="session-list col-lg-8">
-                <div class="col-sm-2">
+            <div ng-click="resumeSession(session.id)" ng-class="{ selectable: session.endTime == '0000-00-00 00:00:00'}" class="session-list col-lg-8">
+                <div class="col-xs-3">
                     <i style="font-size: 8em" class="glyphicon glyphicon-time"></i>
                 </div>
-                <div class="col-sm-3 data">
+                <div class="col-xs-5 data">
                     <ul>
                         <li>
                             <ul class="col-group">
@@ -43,9 +44,13 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-6 task-list">
-
+                <div class="col-xs-4 task-list">
+                    <span class="task tag" ng-repeat="task in taskList">
+                        {{task.name}}
+                        <a class="glyphicon glyphicon-remove"></a>
+                    </span>
                 </div>
+                <div class="clearfix"></div>
             </div>
         </div>
         <div class="row">

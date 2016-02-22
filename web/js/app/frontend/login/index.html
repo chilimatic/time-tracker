@@ -46,7 +46,7 @@
                 <input ng-model="creationData.verifyEmail.value" id="user-create-email-verify" class="form-control" type="text" placeholder="repeat your email" />
                 <div class="msg error" ng-if="creationData.verifyEmail.error.length">
                     <ul>
-                        <li ng-repeat="error in creationData.verifyEmail.error">{{::error}}</li>
+                        <li ng-repeat="error in creationData.verifyEmail.error">{{error}}</li>
                     </ul>
                 </div>
             </fieldset>
@@ -55,7 +55,7 @@
                 <input ng-model="creationData.password.value" id="user-create-password" class="form-control" type="password" placeholder="your password" />
                 <div class="msg error" ng-if="creationData.password.error.length">
                     <ul>
-                        <li ng-repeat="error in creationData.password.error">{{::error}}</li>
+                        <li ng-repeat="error in creationData.password.error">{{error}}</li>
                     </ul>
                 </div>
             </fieldset>

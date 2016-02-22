@@ -90,6 +90,34 @@ header {
     padding: 1em;
   }
 
+  .project {
+    padding: 1em;
+    color: $color-primary-0;
+    border-radius: 10px;
+    background-color: #d0e5f5;
+    margin: 1em 0;
+    font-size: 1.2em;
+    clear: both;
+    cursor: pointer;
+    &:hover {
+      background-color: #d9eeff;
+      cursor: pointer;
+    }
+
+    .project-label {
+      font-size: 6em;
+      line-height: 0;
+    }
+    .project-name {
+      font-size: 2em;
+      line-height: 3em;
+    }
+    .project-options {
+
+    }
+  }
+
+
   .session-list {
     padding: 1em;
     color: $color-primary-0;
@@ -108,10 +136,30 @@ header {
     .icon {
       border-right: 1px solid $color-primary-3;
     }
+
     .task-list {
       border: 2px dashed $color-primary-3;
       border-radius: 5px;
       height: 133px;
+      overflow: hidden;
+      span {
+        &.tag {
+          background-color: #417e80;
+          border-radius: 5px;
+          color: #fff;
+          display: inline-block;
+          margin: 0.2em;
+          padding: 0.5em;
+
+          a {
+            color: inherit;
+            cursor: pointer;
+            &:hover {
+              text-decoration: none;
+            }
+          }
+        }
+      }
     }
 
     .data {

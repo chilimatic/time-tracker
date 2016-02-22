@@ -148,6 +148,8 @@ define(['app'], function(app)
                 'currentSession' : {}
             };
 
+
+
             /**
              *
              * @type {number}
@@ -158,7 +160,9 @@ define(['app'], function(app)
              *
              * @type {{}}
              */
-            $scope.taskList = {};
+            $scope.taskList = {
+                '58' : ['stuff', 'and', 'stuff']
+            };
 
             /**
              *
