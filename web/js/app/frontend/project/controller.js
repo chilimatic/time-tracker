@@ -315,9 +315,10 @@ define(['app'], function(app)
                         }
                         var data = promise.response.data;
 
-                        $scope.getTaskList(data.project.id);
 
-                        if (data.project) {
+                        if (data.project)
+                        {
+                            $scope.getTaskList(data.project.id);
                             $scope.selectedProject = data;
 
                             data.sessionList.map(function(element) {
@@ -333,6 +334,7 @@ define(['app'], function(app)
                                 'sessionList' : []
                             };
                         }
+
 
                     }
                 );

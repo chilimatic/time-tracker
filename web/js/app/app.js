@@ -220,10 +220,13 @@ define(['route', 'service/resolver'], function(routing, resolver)
                         actionName        : 'logout'
                     },
                     null
-                    ,function(promise) {
-                        if (!promise.response.success) {
+                    ,function(promise)
+                    {
+
+                        if (!promise.response || !promise.response.success) {
                             return;
                         }
+                        
                         that.setUserData(null);
                         that.getSession().destroy();
                         that.destroyLocalSessionData();
