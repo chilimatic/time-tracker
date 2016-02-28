@@ -161,11 +161,11 @@ class Index extends Application
         $project = $em->findOneBy(new Project(), ['id' => $projectId]);
 
         if (!$project->getId()) {
-            $this->errorMessage('project-deletion-failed', _('Project-name already exists!'));
+            $this->errorMessage('project-deletion-failed', _('Project-name does not exist!'));
             return;
         }
 
-        if (!$em->delete($project)) {
+        if ($em->delete($project)) {
             $this->successMessage('project-deleted', _('Project successfully deleted'));
         } else {
             $this->errorMessage('project-deletion-failed', _('Project could not be deleted'));

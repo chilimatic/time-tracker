@@ -117,14 +117,19 @@ header {
     }
   }
 
-
-  .session-list {
+  .session {
     padding: 1em;
     color: $color-primary-0;
     border-radius: 10px;
     background-color: #d0e5f5;
     margin: 1em 0;
     font-size: 1.2em;
+
+
+    &.active {
+      border: 2px solid $color-primary-3;
+    }
+
     &.selectable {
       &:hover {
         background-color: #d9eeff;

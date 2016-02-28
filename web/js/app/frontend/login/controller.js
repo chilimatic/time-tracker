@@ -3,7 +3,7 @@
 define(['app'], function(app)
 {
     app
-        .controller('loginController', ['$scope', '$location', 'login', 'user', function($scope, $location, login, user)
+        .controller('loginController', ['$scope','$rootScope', '$location', 'login', 'user', function($scope, $rootScope, $location, login, user)
         {
             /**
              * @type {{email: string, password: string}}
@@ -49,6 +49,15 @@ define(['app'], function(app)
                     error: []
                 }
             };
+
+            $rootScope.$on('login-error', function(e, param){
+                if (!param) {
+                    return;
+                }
+                $scope.message['type'] = 'error';
+                $scope.message['message'] = param.msg;
+
+            });
 
             /**
              * http://stackoverflow.com/questions/46155/validate-email-address-in-javascript

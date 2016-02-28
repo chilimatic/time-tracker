@@ -37,13 +37,13 @@ define(['app'], function(app)
             };
 
             $rootScope.$on('login-error', function(event, param1) {
-                console.log(param1);
+                //console.log(param1);
             });
 
             $scope.deleteProject = function(projectModel)
             {
                 if (!projectModel.id) {
-                    return;
+                    return false;
                 }
 
                 project.delete(
@@ -53,16 +53,28 @@ define(['app'], function(app)
                     {
                         'projectId' : projectModel.id
                     },
-                    function(promise) {
+                    function(promise)
+                    {
                         if (!promise.response) {
                             return;
                         }
 
-                        if (promise.reponse.success) {
-                            delete $scope.projectList[$scope.projectList.indexOf(project)];
+                        if (promise.response.success)
+                        {
+                            var pL = JSON.parse(JSON.stringify($scope.projectList));
+                            $scope.projectList = [];
+                            for (var i in pL) {
+                                if (projectModel.id == pL[i].id) {
+                                    continue;
+                                }
+                                $scope.projectList.push(pL[i])
+                            }
+
                         }
                     }
-                )
+                );
+
+                return false;
             };
 
 
@@ -218,6 +230,7 @@ define(['app'], function(app)
                         var data = promise.response.data;
 
                         if (data) {
+                            var totalAmount = 0;
                             $scope.totalAmount = 0;
                             $scope.selectedProject.currentSession = data;
                             $scope.selectedProject.sessionList.map(function(element) {
@@ -226,11 +239,14 @@ define(['app'], function(app)
                                         element[i] = data[i];
                                     }
                                 }
-                                $scope.totalAmount += element.timeDiff;
+                                totalAmount += parseFloat(element.timeDiff);
                             });
                             // from minutes to hours
-                            $scope.totalAmount = $scope.totalAmount / 60;
+                            totalAmount = totalAmount / 60;
+                            $scope.totalAmount = totalAmount.toPrecision(2);
+
                         }
+
                     }
                 )
             };
@@ -327,7 +343,7 @@ define(['app'], function(app)
                                 }
                             });
                             // from minutes to hours
-                            $scope.totalAmount = $scope.totalAmount / 60;
+                            $scope.totalAmount = Math.round($scope.totalAmount / 60);
                         } else {
                             $scope.projectList = {
                                 'project' : {},
