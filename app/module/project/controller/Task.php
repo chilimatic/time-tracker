@@ -5,6 +5,7 @@ use chilimatic\lib\database\sql\orm\EntityManager;
 use chilimatic\lib\di\ClosureFactory;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\project\model\Task as TaskModel;
+use timetracker\app\module\project\model\UserProjectMap;
 use timetracker\app\module\project\model\UserProjectTaskMap;
 
 /**
@@ -57,11 +58,22 @@ class Task extends Application
          * @var EntityManager $em
          */
         $em = ClosureFactory::getInstance()->get('entity-manager');
-        $taskList = $em->findBy(
-            new UserProjectTaskMap(),
+        $projectMap = $em->findOneBy(
+            new UserProjectMap(),
             [
                 'user_id'       => $this->getUser()->getUser()->getId(),
                 'project_id'    => (int) $request->getRaw()->get('project_id')
+            ]
+        );
+
+        if (!$projectMap->getId()) {
+            $this->successMessage('success', '', null, []);
+        }
+
+        $taskList = $em->findBy(
+            new UserProjectTaskMap(),
+            [
+                'user_project_map_id' => $projectMap->getId()
             ]
         );
 
@@ -88,9 +100,9 @@ class Task extends Application
             return;
         }
 
-        $taskName = $request->getRaw()->get('task_name');
+        $taskName = $request->getRaw()->get('task-name');
         if (!$taskName) {
-            $this->errorMessage('error', _('no project id has been given'));
+            $this->errorMessage('error', _('no task name has been given'));
             return;
         }
 
@@ -110,10 +122,18 @@ class Task extends Application
         }
 
         // if it's mapped to a user it will be created accordingly
-        if ($request->getRaw()->get('project_id')) {
+        if ($request->getRaw()->get('project-id')) {
             $map = new UserProjectTaskMap();
-            $map->setUserId($this->getUser()->getUser()->getId());
-            $map->setProjectId((int) $request->getRaw()->get('project_id'));
+            $projectMap = $em->findOneBy(
+                new UserProjectMap(),
+                [
+                    'project_id' => (int) $request->getRaw()->get('project-id'),
+                    'user_id' => $this->getUser()->getUser()->getId()
+                ]
+            );
+
+
+            $map->setUserProjectMapId($projectMap->getId());
             $map->setTaskId($task->getId());
             $em->persist($map);
         }

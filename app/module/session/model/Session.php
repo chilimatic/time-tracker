@@ -32,6 +32,11 @@ class Session extends AbstractModel
     private $project_id;
 
     /**
+     * @var bool
+     */
+    private $done;
+
+    /**
      * @var string
      */
     private $start_time;
@@ -114,6 +119,22 @@ class Session extends AbstractModel
         $this->project_id = $project_id;
 
         return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDone()
+    {
+        return $this->done;
+    }
+
+    /**
+     * @param boolean $done
+     */
+    public function setDone($done)
+    {
+        $this->done = $done;
     }
 
     /**
@@ -225,6 +246,7 @@ class Session extends AbstractModel
             'id'            => $this->id,
             'user_id'       => $this->user_id,
             'project_id'    => $this->project_id,
+            'done'          => $this->done,
             'startTime'     => $this->start_time,
             'endTime'       => $this->end_time,
             'timeDiff'      => $this->time_diff

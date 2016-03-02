@@ -10,15 +10,11 @@ use chilimatic\lib\database\sql\orm\AbstractModel;
  */
 class UserProjectTaskMap extends AbstractModel
 {
-    /**
-     * @var int
-     */
-    private $user_id;
 
     /**
      * @var int
      */
-    private $project_id;
+    private $user_project_map_id;
 
     /**
      * @var int
@@ -28,42 +24,19 @@ class UserProjectTaskMap extends AbstractModel
     /**
      * @return int
      */
-    public function getUserId()
+    public function getUserProjectMapId()
     {
-        return $this->user_id;
+        return $this->user_project_map_id;
     }
 
     /**
-     * @param int $user_id
-     *
-     * @return $this
+     * @param int $user_project_map_id
      */
-    public function setUserId($user_id)
+    public function setUserProjectMapId($user_project_map_id)
     {
-        $this->user_id = $user_id;
-
-        return $this;
+        $this->user_project_map_id = $user_project_map_id;
     }
 
-    /**
-     * @return int
-     */
-    public function getProjectId()
-    {
-        return $this->project_id;
-    }
-
-    /**
-     * @param int $project_id
-     *
-     * @return $this
-     */
-    public function setProjectId($project_id)
-    {
-        $this->project_id = $project_id;
-
-        return $this;
-    }
 
     /**
      * @return int
@@ -91,8 +64,7 @@ class UserProjectTaskMap extends AbstractModel
     public function jsonSerialize()
     {
         return [
-            'user_id'       => $this->user_id,
-            'project_id'    => $this->project_id,
+            'user_project_map_id' => $this->user_project_map_id,
             'task_id'       => $this->task_id
         ];
     }

@@ -432,13 +432,14 @@ define(['route', 'service/resolver'], function(routing, resolver)
             return $resource(
                 '/project/task/:actionName',
                 {
-                    actionName: '@id',
+                    'taskName' : null,
+                    'projectId' : null
                 },
                 {
-                    'getTaskForProject': {method : 'POST'},
-                    'getList'   : { method: 'GET'  },
-                    'create'       : { method: 'POST' },
-                    'delete'    : { method: 'POST' }
+                    'getTaskForProject' : { method : 'POST'},
+                    'getList'           : { method: 'GET'  },
+                    'create'            : { method: 'POST' },
+                    'delete'            : { method: 'POST' }
                 }
             );
         }]);

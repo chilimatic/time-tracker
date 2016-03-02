@@ -161,6 +161,11 @@ define(['app'], function(app)
             };
 
 
+            /**
+             * @type {string}
+             */
+            $scope.taskName = '';
+
 
             /**
              *
@@ -186,6 +191,38 @@ define(['app'], function(app)
              * @type {string}
              */
             $scope.timeSearch = '';
+
+            /**
+             *
+             */
+            $scope.addTask = function()
+            {
+                task.create(
+                    {
+                        'actionName' : 'create-task'
+                    },
+                    {
+                        'task-name'  : $scope.taskName,
+                        'project-id' : $scope.selectedProject.project.id
+                    },
+                    function (promise) {
+                        if (!promise.response) {
+                            return;
+                        }
+
+                        var task = promise.response.data;
+
+                        if ($scope.taskList[$scope.selectedProject.project.id]) {
+                            $scope.taskList[$scope.selectedProject.project.id].push(task);
+                        } else {
+                            $scope.taskList[$scope.selectedProject.project.id] = [];
+                            $scope.taskList[$scope.selectedProject.project.id].push(task);
+                        }
+
+
+                    }
+                )
+            };
 
             /**
              *

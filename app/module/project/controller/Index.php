@@ -116,7 +116,7 @@ class Index extends Application
 
         $projectNew = clone $project;
         /**
-         * @var Project $project
+         * @var Project $projectNew
          */
         $projectNew->setName($projectName);
         $projectNew->setCreated($dateTime->format('Y-m-d H:i:s'));
