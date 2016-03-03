@@ -8,7 +8,7 @@ define(['app'], function(app) {
                 list : "=",
                 dropTarget : '='
             },
-            templateUrl: '/js/app/frontend/header/header-tpl.html',
+            templateUrl: '/js/app/frontend/partial/task-list.html',
             link : function(scope, element, attr)
             {
 

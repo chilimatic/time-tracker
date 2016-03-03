@@ -6,7 +6,7 @@
         <div class="form-header">
             <h3>Login</h3>
             <div ng-click="showCreateForm()" class="btn btn-link pull-right">
-                Create User
+                Register...
             </div>
             <div class="clearfix"></div>
         </div>
@@ -29,11 +29,11 @@
     </div>
     <div class="col-md-4 time-tracker-container hide" ng-class="{hide: !showForm}">
         <div class="form-header">
-            <h3>Creation</h3>
+            <h3>Register new User</h3>
         </div>
         <div class="form-body">
             <fieldset class="form-group">
-                <label for="user-create-email">Email:</label>
+
                 <input ng-model="creationData.email.value" id="user-create-email" class="form-control" type="text" placeholder="your email" />
                 <div class="msg error" ng-if="creationData.email.error.length">
                     <ul>
@@ -50,8 +50,8 @@
                     </ul>
                 </div>
             </fieldset>
-            <fieldset class="form-group">
-                <label for="user-create-password">Password:</label>
+            <fieldset class="form-group right-inner-addon">
+                <i class="glyphicon glyphicon-lock"></i>
                 <input ng-model="creationData.password.value" id="user-create-password" class="form-control" type="password" placeholder="your password" />
                 <div class="msg error" ng-if="creationData.password.error.length">
                     <ul>
@@ -59,8 +59,8 @@
                     </ul>
                 </div>
             </fieldset>
-            <fieldset class="form-group">
-                <label for="user-create-password-verify">Repeat Password:</label>
+            <fieldset class="form-group right-inner-addon">
+                <i class="glyphicon glyphicon-lock"></i>
                 <input ng-model="creationData.verifyPassword.value" id="user-create-password-verify" class="form-control" type="password" placeholder="repeat your password" />
                 <div class="msg error" ng-if="creationData.verifyPassword.error.length">
                     <ul>
