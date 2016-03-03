@@ -26,7 +26,6 @@ body {
 
 
 h1, h2, h3, h4, h5 {
-  text-shadow: 1px 1px 1px #141414;
   color: #fff;
 }
 
@@ -58,7 +57,6 @@ header {
 
 .time-tracker-container {
   background-color: $color-primary-1;
-  border-radius: 10px;
   padding: 0;
   float: none;
   margin: 1em auto;
@@ -93,7 +91,6 @@ header {
   .project {
     padding: 1em;
     color: $color-primary-0;
-    border-radius: 10px;
     background-color: #d0e5f5;
     margin: 1em 0;
     font-size: 1.2em;
@@ -120,7 +117,6 @@ header {
   .session {
     padding: 1em;
     color: $color-primary-0;
-    border-radius: 10px;
     background-color: #d0e5f5;
     margin: 1em 0;
     font-size: 1.2em;
@@ -144,13 +140,11 @@ header {
 
     .task-list {
       border: 2px dashed $color-primary-3;
-      border-radius: 5px;
       height: 133px;
       overflow: hidden;
       span {
         &.tag {
           background-color: #417e80;
-          border-radius: 5px;
           color: #fff;
           display: inline-block;
           margin: 0.2em;
@@ -171,11 +165,56 @@ header {
       height: 100%;
     }
   }
+}
 
+
+.left-inner-addon {
+  position: relative;
+  input {
+    padding-left: 30px;
+  }
+  i {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+  }
+}
+
+.right-inner-addon {
+  position: relative;
+  input {
+    padding-right: 30px;
+  }
+  i {
+    position: absolute;
+    right: 0;
+    padding: 10px 12px;
+    pointer-events: none;
+  }
+}
+
+
+
+.login-container {
+  h3 {
+    text-align: center;
+  }
+}
+
+
+
+.task-container {
+  .task-list {
+    span {
+      padding: 1em;
+      margin: 1em;
+      background-color: $color-primary-3;
+
+    }
+  }
 }
 
 .msg {
-  border-radius: 5px;
   padding: 1em;
 
   ul {
@@ -194,6 +233,7 @@ header {
 
 .btn {
   color: #fff;
+  border-radius: 0;
 
   &:hover {
     color: #fff;

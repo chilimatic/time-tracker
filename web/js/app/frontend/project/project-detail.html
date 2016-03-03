@@ -15,8 +15,9 @@
         </div>
         <div>
             <div class="task-container">
-                <task-list list="taskList"></task-list>
                 <div class="col-lg-5">
+                    <task-list list="taskList" drop-target="0"></task-list>
+                    <div class="clearfix"></div>
                     <fieldset class="form-group">
                         <label for="task-name">Name:</label>
                         <input ng-model="taskName" id="task-name" class="form-control" type="text" value="" placeholder="Project name here..." />
@@ -62,7 +63,7 @@
                     </li>
                 </ul>
             </div>
-            <task-list list="taskList"></task-list>
+            <task-list list="taskList" drop-target="1"></task-list>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>
