@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5 {
 
 .form-control {
   border: 1px solid $color-primary-1;
-  background-color: #d0e5f5;
+  background-color: $color-primary-light;
   color: $color-grey;
 
 
@@ -42,6 +42,40 @@ h1, h2, h3, h4, h5 {
   }
 }
 
+.context-menu-box {
+  position: absolute;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .context-menu {
+    border: 1px solid $color-primary-light;
+    font-size: inherit;
+    min-width: 200px;
+    box-shadow: 2px 2px 8px #626262,-2px -2px 8px #626262;
+    li {
+      padding: 0.5em;
+      text-align: center;
+      background-color: $color-primary-light;
+      &:hover {
+        background-color: $color-primary-light-hover;
+      }
+    }
+
+    &::after {
+      width: 1em;
+      height: 1em;
+      content: " ";
+      border-left: 1em solid transparent;
+      border-right: 1em solid transparent;
+      border-bottom: 1em solid $color-primary-light;
+      position: absolute;
+      top: -1em;
+    }
+  }
+}
 
 header {
   padding: 1em 0;
@@ -91,13 +125,13 @@ header {
   .project {
     padding: 1em;
     color: $color-primary-0;
-    background-color: #d0e5f5;
+    background-color: $color-primary-light;
     margin: 1em 0;
     font-size: 1.2em;
     clear: both;
     cursor: pointer;
     &:hover {
-      background-color: #d9eeff;
+      background-color: $color-primary-light-hover;
       cursor: pointer;
     }
 
@@ -109,7 +143,11 @@ header {
       font-size: 2em;
       line-height: 3em;
     }
-    .project-options {
+    .project-option {
+      a {
+        color: $color-primary-3;
+        font-size: 2em;
+      }
 
     }
   }

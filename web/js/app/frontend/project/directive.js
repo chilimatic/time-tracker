@@ -26,8 +26,17 @@ define(['app'], function(app) {
     });
 
     app
-        .directive('sessionList', function() {
+        .directive('projectTileList', function() {
+            return {
+                restrict : 'E',
+                scope : {
+                    projectList : '='
+                },
+                templateUrl : '/js/app/frontend/project/project-tile.html',
+                link : function(scope, element, attr) {
 
+                }
+            }
         })
 
 });
