@@ -32,8 +32,8 @@
             <h3>Register new User</h3>
         </div>
         <div class="form-body">
-            <fieldset class="form-group">
-
+            <fieldset class="form-group right-inner-addon">
+                <i class="glyphicon glyphicon-envelope"></i>
                 <input ng-model="creationData.email.value" id="user-create-email" class="form-control" type="text" placeholder="your email" />
                 <div class="msg error" ng-if="creationData.email.error.length">
                     <ul>
@@ -41,8 +41,8 @@
                     </ul>
                 </div>
             </fieldset>
-            <fieldset class="form-group">
-                <label for="user-create-email-verify">Repeat Email:</label>
+            <fieldset class="form-group right-inner-addon">
+                <i class="glyphicon glyphicon-envelope"></i>
                 <input ng-model="creationData.verifyEmail.value" id="user-create-email-verify" class="form-control" type="text" placeholder="repeat your email" />
                 <div class="msg error" ng-if="creationData.verifyEmail.error.length">
                     <ul>

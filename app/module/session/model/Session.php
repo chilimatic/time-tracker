@@ -12,7 +12,7 @@ use chilimatic\lib\database\sql\orm\AbstractModel;
  * Class Session
  *
  * @package timetracker\app\module\project\model
- * @ORM table=`time-tracker`.`session`;
+ * @ORM table=`time_tracker`.`session`;
  */
 class Session extends AbstractModel
 {

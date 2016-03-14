@@ -3,7 +3,7 @@ CREATE DATABASE `time-tracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
 -- create the user
 CREATE user 'time-tracker'@'localhost' IDENTIFIED BY 'Aef8naelWohGho4lAecu9chaOoHu3soh';
 -- give the user permission to the necessary actions on the database
-GRANT SELECT,INSERT, UPDATE, DELETE ON `time-tracker`.* to 'time-tracker'@'localhost';
+GRANT SELECT,INSERT, UPDATE, DELETE ON `time_tracker`.* to 'time-tracker'@'localhost';
 
 -- user table
 CREATE TABLE IF NOT EXISTS `user` (

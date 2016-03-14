@@ -12,6 +12,7 @@ ini_set("display_errors", 1);
 require_once '../vendor/autoload.php';
 
 define('APPLICATION_PATH', realpath('../'));
+define('INCLUDE_ROOT', APPLICATION_PATH);
 
 try {
     /**

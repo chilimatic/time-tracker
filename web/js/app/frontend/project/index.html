@@ -5,29 +5,19 @@
                 <h2>Project List</h2>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-sm-2">
+                    <a class="btn btn-success" ng-click="showAddProjectForm = !showAddProjectForm">
+                        <i class="glyphicon glyphicon-book"></i>
+                        Add New Project
+                    </a>
+                </div>
+                <project-form show-add-project-form="showAddProjectForm"></project-form>
+            </div>
+        </div>
         <div class="fluid-row project-list">
             <project-tile-list project-list="projectList"></project-tile-list>
-        </div>
-        <div class="row">
-            <div class="col-xs-4">
-                <a class="btn btn-success" ng-click="showAddProjectForm = !showAddProjectForm">
-                    <i class="glyphicon glyphicon-book"></i>
-                    Add New Project
-                </a>
-            </div>
-
-            <div class="clearfix"></div>
-            <div class="col-lg-5" ng-show="showAddProjectForm">
-                <fieldset class="form-group">
-                    <label for="project-name">Name:</label>
-                    <input ng-model="projectName" id="project-name" class="form-control" type="text" value="" placeholder="Project name here..." />
-                </fieldset>
-                <a class="btn btn-info right" ng-click="addProject()">
-                    <i class="glyphicon glyphicon-floppy-disk"></i>
-                    Create Project
-                </a>
-            </div>
-            <div class="clearfix"></div>
         </div>
     </div>
 </div>

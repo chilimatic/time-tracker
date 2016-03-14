@@ -5,7 +5,7 @@ use chilimatic\lib\database\sql\orm\AbstractModel;
 
 /**
  * Class Task
- * @ORM table=`time-tracker`.`task`;
+ * @ORM table=`time_tracker`.`task`;
  * @package timetracker\app\module\project\model
  */
 class Task extends AbstractModel

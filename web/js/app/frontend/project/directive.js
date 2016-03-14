@@ -38,5 +38,18 @@ define(['app'], function(app) {
                 }
             }
         })
+    app.
+        directive('projectForm', function() {
+            return {
+                restrict : 'E',
+                scope : {
+                    showAddProjectForm : '='
+                },
+                templateUrl : '/js/app/frontend/project/project-form.html',
+                link : function(scope, element, attr) {
+
+                }
+            }
+        })
 
 });

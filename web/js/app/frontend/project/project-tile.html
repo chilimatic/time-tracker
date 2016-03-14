@@ -1,4 +1,4 @@
-<div ng-click="selectProject(project)" class="col-lg-5 project" ng-repeat="project in projectList">
+<div ng-if="project.id" ng-click="selectProject(project)" class="col-lg-5 project" ng-repeat="project in projectList">
     <div class="project-label col-xs-3">
         <i class="glyphicon glyphicon-book"></i>
     </div>

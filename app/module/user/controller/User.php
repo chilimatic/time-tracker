@@ -132,7 +132,7 @@ class User extends Application
         /**
          * @var UserModel $user
          */
-        if ($user !== null) {
+        if ($user->getId() !== null) {
             $this->errorMessage('user-already-exists', _('The user already exists!'));
             return;
         }
