@@ -7,13 +7,14 @@
   ],
   "dependencies": {
     "bootstrap-css": "~3.2.0",
-    "angular" : "1.*",
+    "angular": "1.*",
     "angular-route": "*",
     "angular-resource": "*",
-    "angular-storage": "*",
+    "angularjs-datepicker": "*",
     "requirejs": "*",
-    "animate-css": "*",
-    "jquery" : "*",
-    "jquery-ui": "*"
+    "animate-css": "*"
+  },
+  "resolutions": {
+    "angular": "1.5.2"
   }
 }

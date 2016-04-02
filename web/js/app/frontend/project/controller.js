@@ -2,8 +2,6 @@
 
 define(['app'], function(app)
 {
-    var PROJECT_BASE_URL = '/project';
-
     app
         .controller('projectController',
         [
@@ -18,93 +16,16 @@ define(['app'], function(app)
 
             /**
              *
-             * @type {string}
-             */
-            $scope.projectName = '';
-
-            /**
-             *
              * @type {boolean}
              */
             $scope.showAddProjectForm = false;
 
-            /**
-             *
-             * @param project
-             */
-            $scope.selectProject = function(project){
-                $location.url(PROJECT_BASE_URL + '/' + project.name);
-            };
+
 
             $rootScope.$on('login-error', function(event, param1) {
                 //console.log(param1);
             });
 
-            $scope.deleteProject = function(projectModel)
-            {
-                if (!projectModel.id) {
-                    return false;
-                }
-
-                project.delete(
-                    {
-                        'actionName' : 'delete'
-                    },
-                    {
-                        'projectId' : projectModel.id
-                    },
-                    function(promise)
-                    {
-                        if (!promise.response) {
-                            return;
-                        }
-
-                        if (promise.response.success)
-                        {
-                            var pL = JSON.parse(JSON.stringify($scope.projectList));
-                            $scope.projectList = [];
-                            for (var i in pL) {
-                                if (projectModel.id == pL[i].id) {
-                                    continue;
-                                }
-                                $scope.projectList.push(pL[i])
-                            }
-
-                        }
-                    }
-                );
-
-                return false;
-            };
-
-
-            $scope.addProject = function() {
-                if (!$scope.projectName) {
-                    return;
-                }
-
-                project.new(
-                    {
-                        'actionName': 'new'
-                    },
-                    {
-                        'name' : $scope.projectName
-                    },
-                    function(promise) {
-                        if (!promise.response) {
-                            return;
-                        }
-
-                        if (!promise.response.success) {
-                            return;
-                        }
-
-                        // push the last result set onto the list
-                        $scope.projectList.push(promise.response.data);
-                    }
-                );
-
-            };
 
             $scope.init = function()
             {
@@ -156,10 +77,18 @@ define(['app'], function(app)
              */
             $scope.selectedProject = {
                 'project' : {},
+                'totalSessionList' : [],
                 'sessionList' : [],
                 'currentSession' : {}
             };
 
+            /**
+             * @type {{from: null, till: null}}
+             */
+            $scope.dateRange = {
+                from : null,
+                till : null
+            };
 
             /**
              * @type {string}
@@ -192,6 +121,31 @@ define(['app'], function(app)
              */
             $scope.timeSearch = '';
 
+
+            $scope.timeFilter = function()
+            {
+                var currentFrom = $scope.dateRange.from ? new Date($scope.dateRange.from) : null;
+                var currentTill = $scope.dateRange.till ? new Date($scope.dateRange.till) : null;
+                var newSessionList = [];
+
+                $scope.selectedProject.totalSessionList.map(
+                    function(element) {
+                        if (!element.startTime) {
+                            return false;
+                        }
+                        if (currentFrom && currentFrom.getTime() <= new Date(element.startTime.replace(' ', 'T')).getTime()) {
+                            newSessionList.push(element);
+                        } else if (currentTill && currentTill.getTime() >= new Date(element.startTime.replace(' ', 'T')).getTime()) {
+                            newSessionList.push(element);
+                        }
+                    }
+                );
+
+                $scope.selectedProject.sessionList = newSessionList;
+                $scope.calculateTotalDisplayedHours();
+            };
+
+
             /**
              *
              */
@@ -223,6 +177,9 @@ define(['app'], function(app)
                     }
                 )
             };
+
+
+
 
             /**
              *
@@ -309,6 +266,7 @@ define(['app'], function(app)
                         if (data) {
                             $scope.currentSession = data;
                             $scope.selectedProject.sessionList.push($scope.currentSession);
+                            $scope.selectedProject.totalSessionList.push($scope.currentSession);
                         }
                     }
 
@@ -316,6 +274,9 @@ define(['app'], function(app)
             };
 
 
+            /**
+             * @param projectId
+             */
             $scope.getTaskList = function(projectId)
             {
                 if (!projectId) {
@@ -341,8 +302,23 @@ define(['app'], function(app)
                         }
                     }
                 );
-
             };
+
+
+            $scope.calculateTotalDisplayedHours = function()
+            {
+                var tmpAmount = 0;
+                $scope.selectedProject.sessionList.map(function(element) {
+                    if (element.timeDiff) {
+                        tmpAmount += element.timeDiff;
+                    }
+                });
+
+                console.log(tmpAmount);
+                // from minutes to hours
+                $scope.totalAmount = Math.round(tmpAmount / 60);
+            };
+
 
             $scope.init = function()
             {
@@ -373,14 +349,8 @@ define(['app'], function(app)
                         {
                             $scope.getTaskList(data.project.id);
                             $scope.selectedProject = data;
-
-                            data.sessionList.map(function(element) {
-                                if (element.timeDiff) {
-                                    $scope.totalAmount += element.timeDiff;
-                                }
-                            });
-                            // from minutes to hours
-                            $scope.totalAmount = Math.round($scope.totalAmount / 60);
+                            $scope.selectedProject.totalSessionList = data.sessionList;
+                            $scope.calculateTotalDisplayedHours();
                         } else {
                             $scope.projectList = {
                                 'project' : {},
@@ -395,6 +365,7 @@ define(['app'], function(app)
             };
 
             $scope.init();
+
 
         }
     ])

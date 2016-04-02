@@ -44,6 +44,7 @@ h1, h2, h3, h4, h5 {
 
 .context-menu-box {
   position: absolute;
+  width: auto;
 
   ul {
     margin: 0;
@@ -51,6 +52,7 @@ h1, h2, h3, h4, h5 {
   }
 
   .context-menu {
+    z-index: 999;
     border: 1px solid $color-primary-light;
     font-size: inherit;
     min-width: 200px;
@@ -151,6 +153,11 @@ header {
 
     }
   }
+  .project-form {
+    .form-group {
+      margin: 0;
+    }
+  }
 
   .session {
     padding: 1em;
@@ -231,15 +238,15 @@ header {
   }
 }
 
-
-
 .login-container {
   h3 {
     text-align: center;
   }
 }
 
-
+.form-control {
+  border-radius: 0;
+}
 
 .task-container {
   .task-list {

@@ -7,11 +7,11 @@ requirejs.config({
         'angular'           : '/vendor/angular/angular.min',
         'angular-route'     : '/vendor/angular-route/angular-route.min',
         'angular-resource'  : '/vendor/angular-resource/angular-resource.min',
-        'header-controller' : '/js/app/frontend/header/controller'
+        'angular-datepicker': '/vendor/angularjs-datepicker/dist/angular-datepicker.min'
     },
     shim: {
         'app': {
-            deps: ['angular', 'angular-route', 'angular-resource']
+            deps: ['angular', 'angular-route', 'angular-resource', 'angular-datepicker']
         },
         'angular-route': {
             deps: ['angular']
@@ -20,6 +20,12 @@ requirejs.config({
             deps: ['angular']
         },
         'angular-storage' : {
+            deps: ['angular']
+        },
+        'angular-ui' : {
+            deps: ['angular']
+        },
+        'angular-datepicker' : {
             deps: ['angular']
         }
     }

@@ -53,18 +53,31 @@ class Index extends Application
         }
 
         $request = ClosureFactory::getInstance()->get('request-handler', []);
-        if (!$request->getRaw()) {
+        if (!$request->getGet()) {
             $this->errorMessage('getting-detail-failed', _('Please enter project-name!'));
             return;
         }
 
         $projectName = $request->getGet()->get('name');
 
+        if (!$projectName) {
+            $this->errorMessage('getting-detail-failed', _('Please enter project-name!'));
+            return;
+        }
+
+
+        $projectName = urldecode($projectName);
+
         /**
          * @var EntityManager $em
          */
         $em = ClosureFactory::getInstance()->get('entity-manager');
         $project = $em->findOneBy(new Project(), ['name' => $projectName]);
+
+        if (!$project->getId()) {
+            $this->errorMessage('getting-detail-failed', _('Please enter project-name!'));
+            return;
+        }
 
         $sessionData = $em->findBy(
             new Session(),
@@ -73,6 +86,7 @@ class Index extends Application
                 'user_id' => $this->user->getUser()->getId()
             ]
         );
+
 
 
         $this->successMessage(
@@ -141,35 +155,42 @@ class Index extends Application
 
     public function deleteAction()
     {
-        if (!$this->loadUserFromSession()) {
-            $this->errorMessage('login-needed', _('please login!'), null, ['logout' => true]);
-            return;
-        }
+        try {
+            if (!$this->loadUserFromSession()) {
+                $this->errorMessage('login-needed', _('please login!'), null, ['logout' => true]);
+                return;
+            }
 
-        $request = ClosureFactory::getInstance()->get('request-handler', []);
-        if (!$request->getRaw()) {
-            $this->errorMessage('creation-failed', _('Please enter project-name!'));
-            return;
-        }
+            $request = ClosureFactory::getInstance()->get('request-handler', []);
+            if (!$request->getRaw()) {
+                $this->errorMessage('creation-failed', _('Please enter project-name!'));
+                return;
+            }
 
-        $projectId = (int) $request->getRaw()->get('projectId');
+            $projectId = (int) $request->getRaw()->get('projectId');
 
-        /**
-         * @var EntityManager $em
-         */
-        $em = ClosureFactory::getInstance()->get('entity-manager');
-        $project = $em->findOneBy(new Project(), ['id' => $projectId]);
+            /**
+             * @var EntityManager $em
+             */
+            $em = ClosureFactory::getInstance()->get('entity-manager');
+            $project = $em->findOneBy(new Project(), ['id' => $projectId]);
 
-        if (!$project->getId()) {
-            $this->errorMessage('project-deletion-failed', _('Project-name does not exist!'));
-            return;
-        }
+            if (!$project->getId()) {
+                $this->errorMessage('project-deletion-failed', _('Project-name does not exist!'));
+                return;
+            }
 
-        if ($em->delete($project)) {
-            $this->successMessage('project-deleted', _('Project successfully deleted'));
-        } else {
+            if ($em->delete($project)) {
+                $this->successMessage('project-deleted', _('Project successfully deleted'));
+            } else {
+                $this->errorMessage('project-deletion-failed', _('Project could not be deleted'));
+            }
+        } catch (\Exception $e) {
+
+            $log = ClosureFactory::getInstance()->get('error-log', []);
+            $log->log($e->getMessage());
+
             $this->errorMessage('project-deletion-failed', _('Project could not be deleted'));
         }
-
     }
 }

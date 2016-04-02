@@ -1,0 +1,11 @@
+<a class="settings" ng-click="showMenu(); $event.stopPropagation();">
+    <i class="glyphicon glyphicon-cog"></i>
+</a>
+<div class="context-menu-box" ng-if="menuVisible">
+    <ul class="context-menu">
+        <li ng-repeat="entry in menuList" ng-click="entry.callback(context); $event.stopPropagation();">
+            <i ng-if="entry.className" class="{{entry.className}}"></i>
+            {{entry.name}}
+        </li>
+    </ul>
+</div>

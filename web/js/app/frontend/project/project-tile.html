@@ -6,16 +6,7 @@
         {{::project.name}}
     </div>
     <div class="project-option col-xs-1">
-        <a class="settings" ng-click="deleteProject(project); $event.stopPropagation();">
-            <i class="glyphicon glyphicon-cog"></i>
-        </a>
-        <div class="context-menu-box">
-            <ul class="context-menu">
-                <li>details</li>
-                <li>settings</li>
-                <li>share</li>
-            </ul>
-        </div>
+        <context-menu menu-list="menuList" context="project"></context-menu>
     </div>
     <div class="clearfix"></div>
 </div>

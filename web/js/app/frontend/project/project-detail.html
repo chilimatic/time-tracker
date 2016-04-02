@@ -10,32 +10,25 @@
         <h3>~ {{totalAmount}} Hours</h3>
         <div class="row">
             <div class="col-lg-3">
-                <input class="form-control" placeholder="Search" type="text" ng-model="timeSearch" />
+                <fieldset class="right-inner-addon">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <input class="form-control" placeholder="Search" type="text" ng-model="timeSearch" />
+                </fieldset>
+                <datepicker date-format="yyyy-MM-dd">
+                    <input placeholder="From" ng-model="dateRange.from" type="text" class="form-control" ng-change="timeFilter()"/>
+                </datepicker>
+                <datepicker date-format="yyyy-MM-dd">
+                    <input placeholder="Till" ng-model="dateRange.till" type="text" class="form-control" ng-change="timeFilter()"/>
+                </datepicker>
             </div>
         </div>
-        <div>
-            <div class="task-container">
-                <div class="col-lg-5">
-                    <task-list list="taskList" drop-target="0"></task-list>
-                    <div class="clearfix"></div>
-                    <fieldset class="form-group">
-                        <label for="task-name">Name:</label>
-                        <input ng-model="taskName" id="task-name" class="form-control" type="text" value="" placeholder="Project name here..." />
-                    </fieldset>
-                    <a class="btn btn-info right" ng-click="addTask()">
-                        <i class="glyphicon glyphicon-floppy-disk"></i>
-                        Add Task
-                    </a>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
+
 
         <div
                 ng-click="resumeSession(session.id)"
                 ng-class="{ selectable: session.endTime == '0000-00-00 00:00:00', active : session.id == selectedProject.currentSession.id}"
                 ng-if="session.startTime"
-                ng-repeat="session in selectedProject.sessionList | filter : timeSearch"
+                ng-repeat="session in selectedProject.sessionList | filter : magicMeaning"
                 class="session col-lg-8"
         >
             <div class="col-xs-3">
