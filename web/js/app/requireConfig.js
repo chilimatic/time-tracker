@@ -7,11 +7,12 @@ requirejs.config({
         'angular'           : '/vendor/angular/angular.min',
         'angular-route'     : '/vendor/angular-route/angular-route.min',
         'angular-resource'  : '/vendor/angular-resource/angular-resource.min',
-        'angular-datepicker': '/vendor/angularjs-datepicker/dist/angular-datepicker.min'
+        'angular-datepicker': '/vendor/angularjs-datepicker/dist/angular-datepicker.min',
+        'draganddrop'         : '/js/lib/draganddrop'
     },
     shim: {
         'app': {
-            deps: ['angular', 'angular-route', 'angular-resource', 'angular-datepicker']
+            deps: ['angular', 'angular-route', 'angular-resource', 'angular-datepicker', 'draganddrop']
         },
         'angular-route': {
             deps: ['angular']

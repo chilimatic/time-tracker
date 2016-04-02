@@ -1,17 +1,98 @@
 "use strict";
+
+var dropConfiguration = {
+    drop : {
+        callback : function(e)
+        {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (elementDragged && elementDragged != this) {
+                elementDragged.parentNode.removeChild(elementDragged);
+                this.appendChild(elementDragged);
+            }
+
+            this.classList.remove('active');
+            this.classList.remove('over');
+            return false;
+        }
+    },
+    dragover : {
+        callback : function(e)
+        {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('drop');
+            return false;
+        }
+    },
+    dragenter : {
+        callback : function(e)
+        {
+            this.classList.add('over');
+            this.classList.add('active');
+        }
+    },
+    dragleave : {
+        callback : function(e)
+        {
+            this.classList.remove('over');
+            this.classList.remove('active');
+        }
+    }
+};
+
+
+var dragConfiguration =
+{
+    'dragstart'   : {
+        callback: function (e)
+        {
+            e.dataTransfer.effectAllowed = 'move';
+            var elementDragged = this;
+            this.classList.add('dragged');
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+    },
+    'dragend'     : {
+        callback: function (e)
+        {
+            this.classList.remove('dragged');
+            var elementDragged = null;
+        }
+    },
+    'drag'        : {
+        callback: function(e)
+        {
+
+        }
+    }
+};
+
+DragAndDrop.addDropZone('.dropzone', dropConfiguration);
+
+
+
 define(['app'], function(app) {
     app
         .directive('taskList', function() {
         return {
             restrict : 'E',
             scope : {
-                list : "=",
-                dropTarget : '='
+                list        : "=",
+                dropTarget  : '='
             },
             templateUrl: '/js/app/frontend/partial/task-list.html',
             link : function(scope, element, attr)
             {
-
                 scope.close = function(selectedId)
                 {
                     for (var i in scope.list) {
@@ -20,18 +101,40 @@ define(['app'], function(app) {
                             return;
                         }
                     }
-                }
+                };
+
+                scope.init = function() {
+                    DragAndDrop.addDropZone('.task_drop', dropConfiguration);
+                };
+
+                scope.init();
             }
         }
     });
 
+    app
+        .directive('task', function()
+        {
+            return {
+                restrice : 'E',
+                scope: {
+                    set         : '='
+                },
+                template : '<span id="{{set.id}}">{{set.name}}</span>',
+                link : function(scope, element, attr)
+                {
+                    DragAndDrop.addDraggable(element, dragConfiguration);
+                }
+            }
+        });
 
     app
         .directive('projectTileList', function() {
             return {
                 restrict : 'E',
                 scope : {
-                    projectList : '='
+                    projectList : '=',
+                    setting     : "="
                 },
                 templateUrl : '/js/app/frontend/project/project-tile.html',
                 controller : ['$scope', '$location', 'project', function($scope, $location, project)

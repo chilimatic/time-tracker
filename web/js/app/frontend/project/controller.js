@@ -15,11 +15,18 @@ define(['app'], function(app)
             $scope.projectList = [];
 
             /**
-             *
              * @type {boolean}
              */
             $scope.showAddProjectForm = false;
 
+            /**
+             * only objects can 2 way bound
+             *
+             * @type {{listView: boolean}}
+             */
+            $scope.setting = {
+                listView : false
+            };
 
 
             $rootScope.$on('login-error', function(event, param1) {
@@ -69,8 +76,8 @@ define(['app'], function(app)
     );
 
     app.controller('projectDetailController', [
-        '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession', 'task',
-        function($scope, $rootScope, $location, project, login, projectSession, task)
+        '$scope', '$rootScope', '$location', '$timeout', 'project', 'login', 'projectSession', 'task',
+        function($scope, $rootScope, $location, $timeout, project, login, projectSession, task)
         {
             /**
              * @type {{project: {}, sessionList: Array, currentSession: {}}}
@@ -90,6 +97,11 @@ define(['app'], function(app)
                 till : null
             };
 
+            $scope.setting = {
+                showTask : true
+            };
+
+
             /**
              * @type {string}
              */
@@ -104,11 +116,22 @@ define(['app'], function(app)
 
             /**
              *
-             * @type {{}}
+             * @type {*[]}
              */
-            $scope.taskList = {
-                '58' : ['stuff', 'and', 'stuff']
-            };
+            $scope.taskList = [
+                {
+                    id        : '58',
+                    name      : 'stuff'
+                },
+                {
+                    id        : '56',
+                    name      : 'omg such stuff!!'
+                },
+                {
+                    id        : '51',
+                    name      : 'stuffnstuff'
+                }
+            ];
 
             /**
              *
@@ -282,6 +305,10 @@ define(['app'], function(app)
                 if (!projectId) {
                     return;
                 }
+                /**
+                 * @todo remove after testing drag and drop
+                 */
+                return;
 
                 task.getTaskForProject(
                     {
@@ -307,16 +334,20 @@ define(['app'], function(app)
 
             $scope.calculateTotalDisplayedHours = function()
             {
-                var tmpAmount = 0;
-                $scope.selectedProject.sessionList.map(function(element) {
-                    if (element.timeDiff) {
-                        tmpAmount += element.timeDiff;
-                    }
-                });
+                // non blocking calculation
+                $timeout(
+                    function() {
+                        var tmpAmount = 0;
+                        $scope.selectedProject.sessionList.map(function(element) {
+                            if (element.timeDiff) {
+                                tmpAmount += element.timeDiff;
+                            }
+                        });
 
-                console.log(tmpAmount);
-                // from minutes to hours
-                $scope.totalAmount = Math.round(tmpAmount / 60);
+                        // from minutes to hours
+                        $scope.totalAmount = Math.round(tmpAmount / 60);
+                    }
+                );
             };
 
 
@@ -344,7 +375,6 @@ define(['app'], function(app)
                         }
                         var data = promise.response.data;
 
-
                         if (data.project)
                         {
                             $scope.getTaskList(data.project.id);
@@ -357,16 +387,11 @@ define(['app'], function(app)
                                 'sessionList' : []
                             };
                         }
-
-
                     }
                 );
-
             };
 
             $scope.init();
-
-
         }
     ])
 

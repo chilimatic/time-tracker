@@ -1,12 +1,11 @@
-<div ng-if="project.id" ng-click="selectProject(project)" class="col-lg-5 project" ng-repeat="project in projectList">
+<div ng-if="project.id" ng-click="selectProject(project)" ng-class="{'list col-lg-3': setting.listView, 'col-lg-5' : !setting.listView}" class=" project" ng-repeat="project in projectList">
     <div class="project-label col-xs-3">
         <i class="glyphicon glyphicon-book"></i>
     </div>
-    <div class="project-name col-xs-8">
+    <div ng-class="{'col-lg-7': setting.listView, 'col-lg-8' : !setting.listView}"  class="project-name">
         {{::project.name}}
     </div>
-    <div class="project-option col-xs-1">
+    <div ng-class="{'col-lg-2': setting.listView, 'col-lg-1' : !setting.listView}" class="project-option col-xs-1">
         <context-menu menu-list="menuList" context="project"></context-menu>
     </div>
-    <div class="clearfix"></div>
 </div>

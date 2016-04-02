@@ -23,6 +23,13 @@
             </div>
         </div>
 
+        <div class="task-container" ng-show="setting.showTask">
+            <ul>
+                <li ng-repeat="map in taskList">
+                    <task set="map"></task>
+                </li>
+            </ul>
+        </div>
 
         <div
                 ng-click="resumeSession(session.id)"

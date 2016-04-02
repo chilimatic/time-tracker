@@ -132,6 +132,10 @@ header {
     font-size: 1.2em;
     clear: both;
     cursor: pointer;
+
+    -webkit-transition: width 1s, height 1s, -webkit-transform 2s;
+    transition: width 1s, height 1s, transform 2s;
+
     &:hover {
       background-color: $color-primary-light-hover;
       cursor: pointer;
@@ -150,8 +154,40 @@ header {
         color: $color-primary-3;
         font-size: 2em;
       }
-
     }
+
+    &.list {
+      padding: 0.5em;
+      color: $color-primary-0;
+      background-color: $color-primary-light;
+      margin: 0.5em 0;
+      margin-right: 0.5em;
+
+      font-size: 1em;
+      clear: none;
+      cursor: pointer;
+      &:hover {
+        background-color: $color-primary-light-hover;
+        cursor: pointer;
+      }
+
+      .project-label {
+        font-size: 3em;
+        line-height: 0;
+      }
+      .project-name {
+        font-size: 1em;
+        line-height: 3em;
+      }
+      .project-option {
+        a {
+          color: $color-primary-3;
+          font-size: 2em;
+        }
+      }
+    }
+
+
   }
   .project-form {
     .form-group {
@@ -248,13 +284,18 @@ header {
   border-radius: 0;
 }
 
+.task-list {
+  &.over {
+    opacity: 0.8;
+  }
+}
+
 .task-container {
   .task-list {
     span {
       padding: 1em;
       margin: 1em;
       background-color: $color-primary-3;
-
     }
   }
 }
