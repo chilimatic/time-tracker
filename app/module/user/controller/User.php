@@ -127,7 +127,7 @@ class User extends Application
          * @var EntityManager $em
          */
         $em = ClosureFactory::getInstance()->get('entity-manager', []);
-        $user = $em->findOneBy(new UserModel(), ['user' => $username]);
+        $user = $em->findOneBy(new UserModel(), ['name' => $username]);
 
         /**
          * @var UserModel $user
