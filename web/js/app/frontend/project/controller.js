@@ -64,10 +64,7 @@ define(['app'], function(app)
             /**
              * @type {Array}
              */
-            $scope.data = [{
-                key:"4-9",
-                values:[{"x":1,"y":0}]
-            }, {key:"4-9",values:{"x":1,"y":0}}];
+            $scope.data = [];
 
             
             $rootScope.$on('login-error', function(event, param1) {
