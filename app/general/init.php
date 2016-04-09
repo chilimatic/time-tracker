@@ -1,7 +1,6 @@
 <?php
 
 date_default_timezone_set('Europe/Vienna');
-
 set_exception_handler(function($e)
 {
     echo $e->getMessage();

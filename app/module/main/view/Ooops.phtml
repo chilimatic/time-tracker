@@ -1,28 +1,35 @@
-<?php
-/**
- *
- * @author j
- * Date: 10/22/15
- * Time: 10:24 PM
- *
- * File: ooops.phtml
- */
-?>
 <html>
-    <head>
-        <title><?php echo _('error'); ?></title>
-        <link rel="stylesheet" type="text/css" href="/css/assets/chilimatic.css" />
+    <head lang="en">
+        <base href="/">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title><?php echo $this->pageTitle; ?></title>
+        <link rel="stylesheet" type="text/css" href="/vendor/animate-css/animate.min.css" />
+        <link rel="stylesheet" type="text/css" href="/vendor/bootstrap-css/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/vendor/bootstrap-css/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="/css/assets/layout.min.css" />
     </head>
     <body>
-        <div>
-            <h1>Suprender ! .... you have encountered and error</h1>
-            <?php foreach($this->logMessages as $message): ?>
-            <p style="background: #fff; padding: 10px; border-radius: 5px; margin: 10px;">
-                Date: <?php echo $message['date'] ?><br />
-                Error: <?php echo $message['message'] ?><br />
-            </p>
-            <pre style="background: #fff; padding: 10px; border-radius: 5px; margin: 10px;"><?php echo $message['data'] ?></pre>
-            <?php endforeach; ?>
+        <div class="container">
+            <div class="row">
+                <h1 class="error">Suprender ! .... you have encountered and error</h1>
+            </div>
+            <?php
+            if (!empty($this->logMessages)) :
+                foreach($this->logMessages as $message):
+            ?>
+            <div class="row error">
+                <p class="msg error">
+                    Date: <?php echo $message['date'] ?><br />
+                    Error: <?php echo $message['message'] ?><br />
+                </p>
+
+                <pre class="pre error"><?php echo $message['data'] ?></pre>
+            </div>
+            <?php
+                endforeach;
+            endif;
+            ?>
         </div>
     </body>
 </html>

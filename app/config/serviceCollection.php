@@ -12,6 +12,10 @@
             return new \chilimatic\lib\view\PHtml();
         },
         'db' => function($setting = []) {
+            if (!isset($setting['dns'])) {
+                throw new RuntimeException('Connection string is missing');
+            }
+
             return new PDO($setting['dns']);
         },
         'request-handler' => function($setting = []) {
@@ -76,9 +80,16 @@
             return $queryBuilder;
         },
         'error-handler' => function($setting = []) {
-            return new \chilimatic\lib\error\Handler(
-                new \chilimatic\lib\log\client\PrintOutWebTemplate()
-            );
+            if (!empty($setting['debug'])) {
+                $client = new \chilimatic\lib\log\client\PrintOutWebTemplate();
+            } else {
+                $config = \chilimatic\lib\di\ClosureFactory::getInstance()->get('config');
+                $client = new \chilimatic\lib\log\client\ToFile();
+                $client->setTargetFile(
+                    $config->get('error_log_path') . DIRECTORY_SEPARATOR . 'error' . DIRECTORY_SEPARATOR . date('Y-m-d')
+                );
+            }
+            return new \chilimatic\lib\error\Handler($client);
         },
         'authentication-service' => function($setting = []) {
             return new \timetracker\app\module\user\service\Authentification();

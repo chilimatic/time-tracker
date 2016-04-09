@@ -33,7 +33,7 @@ catch (Exception $e)
         /**
          * @var $eh \chilimatic\lib\error\Handler
          */
-        $eh = $dispatcher->get('error-handler', null, true)->getClient();
+        $eh = $dispatcher->get('error-handler', ['debug' => $config->get('debug')], true)->getClient();
         if ($eh->showError()) {
             $eh->log(
                 $e->getMessage(),
