@@ -190,9 +190,14 @@ define(['app'], function(app)
                         if (!element.startTime) {
                             return false;
                         }
-                        if (currentFrom && currentFrom.getTime() <= new Date(element.startTime.replace(' ', 'T')).getTime()) {
+                        var elementStartTime = new Date(element.startTime.replace(' ', 'T'));
+
+                        if (currentFrom && currentFrom.getTime() <= elementStartTime.getTime()) {
                             newSessionList.push(element);
-                        } else if (currentTill && currentTill.getTime() >= new Date(element.startTime.replace(' ', 'T')).getTime()) {
+                        } else if (
+                            currentTill && currentTill.getTime() >= elementStartTime.getTime() &&
+                            (currentFrom && currentFrom.getTime() <= elementStartTime.getTime()))
+                        {
                             newSessionList.push(element);
                         }
                     }
@@ -374,9 +379,10 @@ define(['app'], function(app)
                         var timestring ='';
 
                         $scope.selectedProject.sessionList.map(function(element) {
-                            if (element.timeDiff) {
+                            if (element.timeDiff && element.startTime) {
                                 tmpAmount += element.timeDiff;
-                                time = new Date(element.startTime.replace(' ', 'T'));
+
+                                var time = new Date(element.startTime.replace(' ', 'T'));
                                 timestring = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
                                 if (set[timestring] === undefined) {
                                     set[timestring] = element.timeDiff;
