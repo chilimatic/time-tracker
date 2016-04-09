@@ -4,6 +4,9 @@ date_default_timezone_set('Europe/Vienna');
 
 set_exception_handler(function($e)
 {
+    /**
+     * @var \Exception $e
+     */
     echo $e->getMessage();
     echo $e->getTraceAsString();
 });

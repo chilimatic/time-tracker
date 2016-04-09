@@ -133,6 +133,7 @@ class Application extends HTTPController
 
         return $this;
     }
+    
 
     /**
      * @return \timetracker\app\module\user\decorator\User

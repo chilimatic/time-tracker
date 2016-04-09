@@ -6,15 +6,19 @@
     "**/*.txt"
   ],
   "dependencies": {
-    "bootstrap-css": "~3.2.0",
-    "angular": "1.*",
-    "angular-route": "*",
-    "angular-resource": "*",
+    "bootstrap-css"       : "~3.2.0",
+    "angular"             : "1.*",
+    "angular-route"       : "*",
+    "angular-resource"    : "*",
     "angularjs-datepicker": "*",
-    "requirejs": "*",
-    "animate-css": "*"
+    "requirejs"           : "*",
+    "animate-css"         : "*",
+    "d3"                  : "*",
+    "nvd3"                : "*",
+    "angular-nvd3"        : "*"
+
   },
   "resolutions": {
-    "angular": "1.5.2"
+    "angular" : "1.5.2"
   }
 }

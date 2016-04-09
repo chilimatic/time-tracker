@@ -6,7 +6,7 @@ var PROJECT_BASE_URL = '/project';
  */
 define(['route', 'service/resolver'], function(routing, resolver)
 {
-    var app = angular.module('timetracker-frontend', ['ngResource', 'ngRoute', '720kb.datepicker']);
+    var app = angular.module('timetracker-frontend', ['ngResource', 'ngRoute', '720kb.datepicker', 'nvd3']);
     /**
      * lazy loading approach with require.js
      */
@@ -447,10 +447,11 @@ define(['route', 'service/resolver'], function(routing, resolver)
             '/session/index/:actionName',
             null,
             {
-                'getList'   : { method: 'GET' },
-                'get'       : { method: 'GET' },
-                'start'     : { method: 'POST'},
-                'end'       : { method: 'POST'}
+                'getList'           : { method: 'GET' },
+                'get'               : { method: 'GET' },
+                'getUserStatistic'  : { method: 'GET', params : {'project_id' : null} },
+                'start'             : { method: 'POST'},
+                'end'               : { method: 'POST'}
             }
         );
     }]);

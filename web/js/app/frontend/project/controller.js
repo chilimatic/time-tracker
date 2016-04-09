@@ -5,8 +5,8 @@ define(['app'], function(app)
     app
         .controller('projectController',
         [
-            '$scope', '$rootScope', '$location', 'project', 'login',
-            function($scope, $rootScope, $location, project, login)
+            '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession',
+            function($scope, $rootScope, $location, project, login, projectSession)
         {
             /**
              *
@@ -29,6 +29,47 @@ define(['app'], function(app)
             };
 
 
+            /* Chart options */
+            $scope.options = {
+                chart: {
+                    type: 'multiBarChart',
+                    height: 450,
+                    margin : {
+                        top: 20,
+                        right: 20,
+                        bottom: 45,
+                        left: 45
+                    },
+                    clipEdge: true,
+                    //staggerLabels: true,
+                    duration: 500,
+                    stacked: true,
+                    xAxis: {
+                        axisLabel: 'Day',
+                        showMaxMin: false,
+                        tickFormat: function(d){
+                            return d3.format(',f')(d);
+                        }
+                    },
+                    yAxis: {
+                        axisLabel: 'amount',
+                        axisLabelDistance: -20,
+                        tickFormat: function(d){
+                            return d3.format(',.1f')(d);
+                        }
+                    }
+                }
+            };
+
+            /**
+             * @type {Array}
+             */
+            $scope.data = [{
+                key:"4-9",
+                values:[{"x":1,"y":0}]
+            }, {key:"4-9",values:{"x":1,"y":0}}];
+
+            
             $rootScope.$on('login-error', function(event, param1) {
                 //console.log(param1);
             });
@@ -42,6 +83,29 @@ define(['app'], function(app)
                 login.getSession().start();
                 // get the user model
                 $scope.user = login.getUserData();
+
+                projectSession.getUserStatistic(
+                    {
+                        'actionName' : 'get-user-statistic'
+                    },
+                    null,
+                    function (promise) {
+
+                        if (!promise.timeDiff) {
+                            return;
+                        }
+
+                        if (promise.timeDiff) {
+                            $scope.data = promise.timeDiff;
+                        } else {
+                            $scope.data = [];
+                        }
+
+                        console.log(promise.timeDiff);
+
+                        $scope.api.refresh();
+                    }
+                );
 
                 project.getList(
                     {
@@ -83,10 +147,10 @@ define(['app'], function(app)
              * @type {{project: {}, sessionList: Array, currentSession: {}}}
              */
             $scope.selectedProject = {
-                'project' : {},
-                'totalSessionList' : [],
-                'sessionList' : [],
-                'currentSession' : {}
+                'project'           : {},
+                'totalSessionList'  : [],
+                'sessionList'       : [],
+                'currentSession'    : {}
             };
 
             /**
@@ -101,37 +165,10 @@ define(['app'], function(app)
                 showTask : true
             };
 
-
             /**
              * @type {string}
              */
             $scope.taskName = '';
-
-
-            /**
-             *
-             * @type {number}
-             */
-            $scope.totalAmount = 0;
-
-            /**
-             *
-             * @type {*[]}
-             */
-            $scope.taskList = [
-                {
-                    id        : '58',
-                    name      : 'stuff'
-                },
-                {
-                    id        : '56',
-                    name      : 'omg such stuff!!'
-                },
-                {
-                    id        : '51',
-                    name      : 'stuffnstuff'
-                }
-            ];
 
             /**
              *
@@ -200,8 +237,6 @@ define(['app'], function(app)
                     }
                 )
             };
-
-
 
 
             /**
@@ -338,11 +373,26 @@ define(['app'], function(app)
                 $timeout(
                     function() {
                         var tmpAmount = 0;
+                        var set  = {};
+                        var timestring ='';
+
                         $scope.selectedProject.sessionList.map(function(element) {
                             if (element.timeDiff) {
                                 tmpAmount += element.timeDiff;
+                                time = new Date(element.startTime.replace(' ', 'T'));
+                                timestring = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
+                                if (set[timestring] === undefined) {
+                                    set[timestring] = element.timeDiff;
+                                } else {
+                                    set[timestring] += element.timeDiff;
+                                }
                             }
                         });
+
+                        var timeSet = [];
+                        for (var i in set) {
+                            timeSet.push(i.set)
+                        }
 
                         // from minutes to hours
                         $scope.totalAmount = Math.round(tmpAmount / 60);
