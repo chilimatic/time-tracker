@@ -97,8 +97,7 @@ define(['app'], function(app)
                         } else {
                             $scope.data = [];
                         }
-
-                        console.log(promise.timeDiff);
+                        
 
                         $scope.api.refresh();
                     }
