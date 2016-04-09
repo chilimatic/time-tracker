@@ -1,10 +1,13 @@
-<div class="col-lg-7" ng-show="showAddProjectForm">
-    <fieldset class="form-group">
-        <input ng-model="projectName" id="project-name" class="form-control" type="text" value="" placeholder="Project name here..." />
+<div ng-show="showAddProjectForm" class="project-form">
+    <div class="col-lg-5">
+        <fieldset class="form-group">
+            <input ng-model="newProjectName" id="project-name" class="form-control" type="text" value="" placeholder="Project name here..." />
+        </fieldset>
+    </div>
+    <div class="col-lg-2">
         <a class="btn btn-info right" ng-click="addProject()">
             <i class="glyphicon glyphicon-floppy-disk"></i>
             Create Project
         </a>
-    </fieldset>
-
+    </div>
 </div>

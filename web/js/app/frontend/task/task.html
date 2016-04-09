@@ -1,0 +1,17 @@
+<div>
+    <div class="task-container">
+        <div class="col-lg-5">
+            <task-list list="taskList" drop-target="0"></task-list>
+            <div class="clearfix"></div>
+            <fieldset class="form-group">
+                <label for="task-name">Name:</label>
+                <input ng-model="taskName" id="task-name" class="form-control" type="text" value="" placeholder="Project name here..." />
+            </fieldset>
+            <a class="btn btn-info right" ng-click="addTask()">
+                <i class="glyphicon glyphicon-floppy-disk"></i>
+                Add Task
+            </a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

@@ -67,6 +67,18 @@ class User implements \JsonSerializable{
     }
 
     /**
+     * @return int|null
+     */
+    public function getUserId()
+    {
+        if (!$this->user) {
+            return null;
+        }
+
+        return $this->user->getId();
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize() {

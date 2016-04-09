@@ -9,16 +9,16 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 ini_set("display_errors", 1);
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-define('APPLICATION_PATH', realpath('../'));
+define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 define('INCLUDE_ROOT', APPLICATION_PATH);
 
 try {
     /**
      * the $dispatcher is created in the following script below
      */
-    require_once '../app/general/init.php';
+    require_once __DIR__ . '/../app/general/init.php';
 
 
     $application = new \chilimatic\lib\application\HTTPMVC($dispatcher, $dispatcher->get('config', [], true));

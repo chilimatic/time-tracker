@@ -2,13 +2,11 @@
 
 define(['app'], function(app)
 {
-    var PROJECT_BASE_URL = '/project';
-
     app
         .controller('projectController',
         [
-            '$scope', '$rootScope', '$location', 'project', 'login',
-            function($scope, $rootScope, $location, project, login)
+            '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession',
+            function($scope, $rootScope, $location, project, login, projectSession)
         {
             /**
              *
@@ -17,94 +15,62 @@ define(['app'], function(app)
             $scope.projectList = [];
 
             /**
-             *
-             * @type {string}
-             */
-            $scope.projectName = '';
-
-            /**
-             *
              * @type {boolean}
              */
             $scope.showAddProjectForm = false;
 
             /**
+             * only objects can 2 way bound
              *
-             * @param project
+             * @type {{listView: boolean}}
              */
-            $scope.selectProject = function(project){
-                $location.url(PROJECT_BASE_URL + '/' + project.name);
+            $scope.setting = {
+                listView : false
             };
 
+
+            /* Chart options */
+            $scope.options = {
+                chart: {
+                    type: 'multiBarChart',
+                    height: 450,
+                    margin : {
+                        top: 20,
+                        right: 20,
+                        bottom: 45,
+                        left: 45
+                    },
+                    clipEdge: true,
+                    //staggerLabels: true,
+                    duration: 500,
+                    stacked: true,
+                    xAxis: {
+                        axisLabel: 'Day',
+                        showMaxMin: false,
+                        tickFormat: function(d){
+                            return d3.format(',f')(d);
+                        }
+                    },
+                    yAxis: {
+                        axisLabel: 'amount',
+                        axisLabelDistance: -20,
+                        tickFormat: function(d){
+                            return d3.format(',.1f')(d);
+                        }
+                    }
+                }
+            };
+
+            /**
+             * @type {Array}
+             */
+            $scope.data = [];
+
+            
             $rootScope.$on('login-error', function(event, param1) {
                 //console.log(param1);
             });
 
-            $scope.deleteProject = function(projectModel)
-            {
-                if (!projectModel.id) {
-                    return false;
-                }
-
-                project.delete(
-                    {
-                        'actionName' : 'delete'
-                    },
-                    {
-                        'projectId' : projectModel.id
-                    },
-                    function(promise)
-                    {
-                        if (!promise.response) {
-                            return;
-                        }
-
-                        if (promise.response.success)
-                        {
-                            var pL = JSON.parse(JSON.stringify($scope.projectList));
-                            $scope.projectList = [];
-                            for (var i in pL) {
-                                if (projectModel.id == pL[i].id) {
-                                    continue;
-                                }
-                                $scope.projectList.push(pL[i])
-                            }
-
-                        }
-                    }
-                );
-
-                return false;
-            };
-
-
-            $scope.addProject = function() {
-                if (!$scope.projectName) {
-                    return;
-                }
-
-                project.new(
-                    {
-                        'actionName': 'new'
-                    },
-                    {
-                        'name' : $scope.projectName
-                    },
-                    function(promise) {
-                        if (!promise.response) {
-                            return;
-                        }
-
-                        if (!promise.response.success) {
-                            return;
-                        }
-
-                        // push the last result set onto the list
-                        $scope.projectList.push(promise.response.data);
-                    }
-                );
-
-            };
 
             $scope.init = function()
             {
@@ -114,6 +80,28 @@ define(['app'], function(app)
                 login.getSession().start();
                 // get the user model
                 $scope.user = login.getUserData();
+
+                projectSession.getUserStatistic(
+                    {
+                        'actionName' : 'get-user-statistic'
+                    },
+                    null,
+                    function (promise) {
+
+                        if (!promise.timeDiff) {
+                            return;
+                        }
+
+                        if (promise.timeDiff) {
+                            $scope.data = promise.timeDiff;
+                        } else {
+                            $scope.data = [];
+                        }
+                        
+
+                        $scope.api.refresh();
+                    }
+                );
 
                 project.getList(
                     {
@@ -148,38 +136,35 @@ define(['app'], function(app)
     );
 
     app.controller('projectDetailController', [
-        '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession', 'task',
-        function($scope, $rootScope, $location, project, login, projectSession, task)
+        '$scope', '$rootScope', '$location', '$timeout', 'project', 'login', 'projectSession', 'task',
+        function($scope, $rootScope, $location, $timeout, project, login, projectSession, task)
         {
             /**
              * @type {{project: {}, sessionList: Array, currentSession: {}}}
              */
             $scope.selectedProject = {
-                'project' : {},
-                'sessionList' : [],
-                'currentSession' : {}
+                'project'           : {},
+                'totalSessionList'  : [],
+                'sessionList'       : [],
+                'currentSession'    : {}
             };
 
+            /**
+             * @type {{from: null, till: null}}
+             */
+            $scope.dateRange = {
+                from : null,
+                till : null
+            };
+
+            $scope.setting = {
+                showTask : true
+            };
 
             /**
              * @type {string}
              */
             $scope.taskName = '';
-
-
-            /**
-             *
-             * @type {number}
-             */
-            $scope.totalAmount = 0;
-
-            /**
-             *
-             * @type {{}}
-             */
-            $scope.taskList = {
-                '58' : ['stuff', 'and', 'stuff']
-            };
 
             /**
              *
@@ -191,6 +176,36 @@ define(['app'], function(app)
              * @type {string}
              */
             $scope.timeSearch = '';
+
+
+            $scope.timeFilter = function()
+            {
+                var currentFrom = $scope.dateRange.from ? new Date($scope.dateRange.from) : null;
+                var currentTill = $scope.dateRange.till ? new Date($scope.dateRange.till) : null;
+                var newSessionList = [];
+
+                $scope.selectedProject.totalSessionList.map(
+                    function(element) {
+                        if (!element.startTime) {
+                            return false;
+                        }
+                        var elementStartTime = new Date(element.startTime.replace(' ', 'T'));
+
+                        if (currentFrom && currentFrom.getTime() <= elementStartTime.getTime()) {
+                            newSessionList.push(element);
+                        } else if (
+                            currentTill && currentTill.getTime() >= elementStartTime.getTime() &&
+                            (currentFrom && currentFrom.getTime() <= elementStartTime.getTime()))
+                        {
+                            newSessionList.push(element);
+                        }
+                    }
+                );
+
+                $scope.selectedProject.sessionList = newSessionList;
+                $scope.calculateTotalDisplayedHours();
+            };
+
 
             /**
              *
@@ -223,6 +238,7 @@ define(['app'], function(app)
                     }
                 )
             };
+
 
             /**
              *
@@ -309,6 +325,7 @@ define(['app'], function(app)
                         if (data) {
                             $scope.currentSession = data;
                             $scope.selectedProject.sessionList.push($scope.currentSession);
+                            $scope.selectedProject.totalSessionList.push($scope.currentSession);
                         }
                     }
 
@@ -316,11 +333,18 @@ define(['app'], function(app)
             };
 
 
+            /**
+             * @param projectId
+             */
             $scope.getTaskList = function(projectId)
             {
                 if (!projectId) {
                     return;
                 }
+                /**
+                 * @todo remove after testing drag and drop
+                 */
+                return;
 
                 task.getTaskForProject(
                     {
@@ -341,8 +365,43 @@ define(['app'], function(app)
                         }
                     }
                 );
-
             };
+
+
+            $scope.calculateTotalDisplayedHours = function()
+            {
+                // non blocking calculation
+                $timeout(
+                    function() {
+                        var tmpAmount = 0;
+                        var set  = {};
+                        var timestring ='';
+
+                        $scope.selectedProject.sessionList.map(function(element) {
+                            if (element.timeDiff && element.startTime) {
+                                tmpAmount += element.timeDiff;
+
+                                var time = new Date(element.startTime.replace(' ', 'T'));
+                                timestring = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
+                                if (set[timestring] === undefined) {
+                                    set[timestring] = element.timeDiff;
+                                } else {
+                                    set[timestring] += element.timeDiff;
+                                }
+                            }
+                        });
+
+                        var timeSet = [];
+                        for (var i in set) {
+                            timeSet.push(i.set)
+                        }
+
+                        // from minutes to hours
+                        $scope.totalAmount = Math.round(tmpAmount / 60);
+                    }
+                );
+            };
+
 
             $scope.init = function()
             {
@@ -368,34 +427,23 @@ define(['app'], function(app)
                         }
                         var data = promise.response.data;
 
-
                         if (data.project)
                         {
                             $scope.getTaskList(data.project.id);
                             $scope.selectedProject = data;
-
-                            data.sessionList.map(function(element) {
-                                if (element.timeDiff) {
-                                    $scope.totalAmount += element.timeDiff;
-                                }
-                            });
-                            // from minutes to hours
-                            $scope.totalAmount = Math.round($scope.totalAmount / 60);
+                            $scope.selectedProject.totalSessionList = data.sessionList;
+                            $scope.calculateTotalDisplayedHours();
                         } else {
                             $scope.projectList = {
                                 'project' : {},
                                 'sessionList' : []
                             };
                         }
-
-
                     }
                 );
-
             };
 
             $scope.init();
-
         }
     ])
 

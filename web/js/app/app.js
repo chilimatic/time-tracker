@@ -1,11 +1,12 @@
+var PROJECT_BASE_URL = '/project';
+
+
 /**
  * Created by j on 8/30/14.
  */
 define(['route', 'service/resolver'], function(routing, resolver)
 {
-    var app = angular.module('timetracker-frontend', ['ngResource', 'ngRoute']);
-
-
+    var app = angular.module('timetracker-frontend', ['ngResource', 'ngRoute', '720kb.datepicker', 'nvd3']);
     /**
      * lazy loading approach with require.js
      */
@@ -95,6 +96,34 @@ define(['route', 'service/resolver'], function(routing, resolver)
     app.service('sessionStorage', function() {
         return window.sessionStorage;
     });
+
+    app.directive('contextMenu', function()
+    {
+        return {
+            restrict : 'E',
+                scope : {
+                menuList : '=',
+                context :  '='
+            },
+            templateUrl : '/js/app/frontend/contextmenu/menu.html',
+            controller : ['$scope', function($scope) {
+
+                /**
+                 * indicator for context menu
+                 * @type {boolean}
+                 */
+                $scope.menuVisible = false;
+
+                $scope.showMenu = function() {
+                    $scope.menuVisible = !$scope.menuVisible;
+                }
+            }]
+        }
+    }
+    );
+
+
+
 
 
     /**
@@ -418,10 +447,11 @@ define(['route', 'service/resolver'], function(routing, resolver)
             '/session/index/:actionName',
             null,
             {
-                'getList'   : { method: 'GET' },
-                'get'       : { method: 'GET' },
-                'start'     : { method: 'POST'},
-                'end'       : { method: 'POST'}
+                'getList'           : { method: 'GET' },
+                'get'               : { method: 'GET' },
+                'getUserStatistic'  : { method: 'GET', params : {'project_id' : null} },
+                'start'             : { method: 'POST'},
+                'end'               : { method: 'POST'}
             }
         );
     }]);

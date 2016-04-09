@@ -30,7 +30,7 @@ class Index extends Application
 
         $session = new Session();
         $session->setProjectId((int) $request->getRaw()->get('projectId'));
-        $session->setUserId($this->user->getUser()->getId());
+        $session->setUserId($this->getUser()->getUserId());
         $session->setStartTime(date('Y-m-d H:i:s'));
         $session->setCreated(date('Y-m-d H:i:s'));
         $session->setModified(date('Y-m-d H:i:s'));
@@ -41,6 +41,60 @@ class Index extends Application
         } else {
             $this->errorMessage('session-start-failed', _('Session could not be started'));
         }
+    }
+
+    public function getUserStatisticAction()
+    {
+        if (!$this->loadUserFromSession()) {
+            $this->errorMessage('login-needed', _('please login!'), null, ['logout' => true]);
+            return;
+        }
+
+        $request = ClosureFactory::getInstance()->get('request-handler', []);
+        $result = [];
+
+
+
+        $month = $request->getGet()->get('month', 'string', date('m'));
+        $year = $request->getGet()->get('year', 'string', date('Y'));
+
+        /**
+         * @var EntityManager $em
+         */
+        $db = ClosureFactory::getInstance()->get('db');
+        $con = $db->getConnectionByPosition(0);
+        $dbh = $con->getDbAdapter();
+        $dbh->beginTransaction();
+        $stmt = $dbh->prepare("
+SELECT 
+  project_id, MONTH(start_time) AS sessionMonth, DAY(start_time) AS sessionDay, SUM(time_diff) AS hour_sum FROM `session` 
+WHERE 
+  user_id = :userId AND MONTH(start_time) = :month AND YEAR(start_time) = :year
+GROUP BY 
+  sessionDay, sessionMonth"
+        );
+
+        $stmt->bindValue('userId', $this->getUser()->getUserId(), \PDO::PARAM_INT);
+        $stmt->bindValue('year', $year);
+        $stmt->bindValue('month', $month);
+
+
+        if ($stmt->execute()) {
+            $set = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            /**
+             * @var array $entry
+             */
+            foreach ($set as $entry) {
+                $result[] = [
+                    'key' => "{$entry['sessionMonth']}-{$entry['sessionDay']}",
+                    'values' => [['x' => 1, 'y' => (float) $entry['hour_sum']]]
+                ];
+            }
+        }
+
+
+        $this->getView()->timeDiff = $result;
     }
 
     public function endAction()

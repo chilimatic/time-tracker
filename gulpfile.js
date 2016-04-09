@@ -26,7 +26,6 @@ gulp.task('styles', function() {
         .pipe(notify({ message: 'Styles task complete' }));
 });
 
-
 gulp.task('scripts', function() {
     return gulp.src('web/js/**/*.js')
         .pipe(jshint('.jshintrc'))
