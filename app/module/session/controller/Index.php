@@ -58,6 +58,9 @@ class Index extends Application
         $month = $request->getGet()->get('month', 'string', date('m'));
         $year = $request->getGet()->get('year', 'string', date('Y'));
 
+        echo $month;
+        echo $year;
+
         /**
          * @var EntityManager $em
          */
@@ -75,8 +78,8 @@ GROUP BY
         );
 
         $stmt->bindValue('userId', $this->getUser()->getUserId(), \PDO::PARAM_INT);
-        $stmt->bindValue('year', $year);
-        $stmt->bindValue('month', $month);
+        $stmt->bindValue('year', $year, \PDO::PARAM_INT);
+        $stmt->bindValue('month', $month, \PDO::PARAM_INT);
 
 
         if ($stmt->execute()) {
