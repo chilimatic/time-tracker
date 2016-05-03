@@ -6,6 +6,7 @@ use chilimatic\lib\di\ClosureFactory;
 use chilimatic\lib\transformer\time\DateDiffToDecimalTime;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\session\model\Session;
+use timetracker\app\module\session\model\SessionDescription;
 
 class Index extends Application
 {
@@ -58,9 +59,6 @@ class Index extends Application
         $month = $request->getGet()->get('month', 'string', date('m'));
         $year = $request->getGet()->get('year', 'string', date('Y'));
 
-        echo $month;
-        echo $year;
-
         /**
          * @var EntityManager $em
          */
@@ -77,6 +75,7 @@ GROUP BY
   sessionDay, sessionMonth"
         );
 
+
         $stmt->bindValue('userId', $this->getUser()->getUserId(), \PDO::PARAM_INT);
         $stmt->bindValue('year', $year, \PDO::PARAM_INT);
         $stmt->bindValue('month', $month, \PDO::PARAM_INT);
@@ -91,7 +90,7 @@ GROUP BY
             foreach ($set as $entry) {
                 $result[] = [
                     'key' => "{$entry['sessionMonth']}-{$entry['sessionDay']}",
-                    'values' => [['x' => 1, 'y' => (float) $entry['hour_sum']]]
+                    'values' => [['x' => $entry['sessionDay'], 'y' => (float) $entry['hour_sum']]]
                 ];
             }
         }
@@ -117,15 +116,43 @@ GROUP BY
          * @var EntityManager $em
          */
         $em = ClosureFactory::getInstance()->get('entity-manager');
+        $sessionRequest =  $request->getRaw()->get('session', null, null);
 
         /**
          * @var Session $session
          */
-        $session = $em->findOneBy(new Session(), ['id' => (int) $request->getRaw()->get('sessionId')]);
+        $session = $em->findOneBy(new Session(), ['id' => (int) $sessionRequest['id']]);
 
         if (!$session->getId()) {
             $this->errorMessage('error', _('no session found'));
             return;
+        }
+
+
+        if (array_key_exists('sessionDescription', $sessionRequest))
+        {
+            $sessionDescription = new SessionDescription();
+
+
+            if (!isset($sessionRequest['sessionDescription']['session_id'])) {
+                $sessionDescription->setSessionId($session->getId());
+                $sessionDescription->setText($sessionRequest['sessionDescription']['text']);
+                $sessionDescription->setCreated(date('Y-m-d H:i:s'));
+                $sessionDescription->setModified(date('Y-m-d H:i:s'));
+                if (!$em->persist($sessionDescription)) {
+                    $this->errorMessage('session-text-error', _('Session Description could not be saved'));
+                }
+            } else {
+                $sessionDescriptionModel = $em->findOneBy($sessionDescription, [
+                    'session_id' => (int) $sessionRequest['sessionDescription']['session_id']
+                ]);
+                $sessionDescriptionModel->setText($sessionRequest['sessionDescription']['text']);
+                $sessionDescriptionModel->setModified(date('Y-m-d H:i:s'));
+
+                if (!$em->persist($sessionDescription)) {
+                    $this->errorMessage('session-text-error', _('Session Description could not be saved'));
+                }
+            }
         }
 
         $endTime = new \DateTime('now');

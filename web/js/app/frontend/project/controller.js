@@ -5,8 +5,8 @@ define(['app'], function(app)
     app
         .controller('projectController',
         [
-            '$scope', '$rootScope', '$location', 'project', 'login', 'projectSession',
-            function($scope, $rootScope, $location, project, login, projectSession)
+            '$scope', '$rootScope', '$location', 'project', 'login',
+            function($scope, $rootScope, $location, project, login)
         {
             /**
              *
@@ -27,45 +27,6 @@ define(['app'], function(app)
             $scope.setting = {
                 listView : false
             };
-
-
-            /* Chart options */
-            $scope.options = {
-                chart: {
-                    type: 'multiBarChart',
-                    height: 450,
-                    margin : {
-                        top: 20,
-                        right: 20,
-                        bottom: 45,
-                        left: 45
-                    },
-                    clipEdge: true,
-                    //staggerLabels: true,
-                    duration: 500,
-                    stacked: true,
-                    xAxis: {
-                        axisLabel: 'Day',
-                        showMaxMin: false,
-                        tickFormat: function(d){
-                            return d3.format(',f')(d);
-                        }
-                    },
-                    yAxis: {
-                        axisLabel: 'amount',
-                        axisLabelDistance: -20,
-                        tickFormat: function(d){
-                            return d3.format(',.1f')(d);
-                        }
-                    }
-                }
-            };
-
-            /**
-             * @type {Array}
-             */
-            $scope.data = [];
-
             
             $rootScope.$on('login-error', function(event, param1) {
                 //console.log(param1);
@@ -80,28 +41,6 @@ define(['app'], function(app)
                 login.getSession().start();
                 // get the user model
                 $scope.user = login.getUserData();
-
-                projectSession.getUserStatistic(
-                    {
-                        'actionName' : 'get-user-statistic'
-                    },
-                    null,
-                    function (promise) {
-
-                        if (!promise.timeDiff) {
-                            return;
-                        }
-
-                        if (promise.timeDiff) {
-                            $scope.data = promise.timeDiff;
-                        } else {
-                            $scope.data = [];
-                        }
-                        
-
-                        $scope.api.refresh();
-                    }
-                );
 
                 project.getList(
                     {
@@ -180,24 +119,23 @@ define(['app'], function(app)
 
             $scope.timeFilter = function()
             {
-                var currentFrom = $scope.dateRange.from ? new Date($scope.dateRange.from) : null;
-                var currentTill = $scope.dateRange.till ? new Date($scope.dateRange.till) : null;
+                var currentFrom = $scope.dateRange.from ? new Date($scope.dateRange.from).getTime() : 0;
+                var currentTill = $scope.dateRange.till ? new Date($scope.dateRange.till).getTime() : null;
                 var newSessionList = [];
 
-                $scope.selectedProject.totalSessionList.map(
-                    function(element) {
-                        if (!element.startTime) {
+                Object.keys($scope.selectedProject).map(
+                    function(key) {
+                        if (!$scope.selectedProject[key].startTime) {
                             return false;
                         }
-                        var elementStartTime = new Date(element.startTime.replace(' ', 'T'));
+                        var elementStartTime = new Date($scope.selectedProject[key].startTime.replace(' ', 'T'));
 
-                        if (currentFrom && currentFrom.getTime() <= elementStartTime.getTime()) {
-                            newSessionList.push(element);
-                        } else if (
-                            currentTill && currentTill.getTime() >= elementStartTime.getTime() &&
-                            (currentFrom && currentFrom.getTime() <= elementStartTime.getTime()))
+                        // if there is no lower bound or the range requirement is full filled
+                        if ((!currentTill || currentTill >= elementStartTime.getTime())
+                            &&
+                            (!currentFrom || (currentFrom <= elementStartTime.getTime())))
                         {
-                            newSessionList.push(element);
+                            newSessionList.push($scope.selectedProject[key]);
                         }
                     }
                 );
@@ -250,12 +188,14 @@ define(['app'], function(app)
                     return;
                 }
 
-                $scope.selectedProject.sessionList.map(function(element){
-                   if (element.id == sessionId) {
-                       $scope.selectedProject.currentSession = element;
-                   }
-                });
-
+                var currentElement;
+                for (var i in $scope.selectedProject.sessionList) {
+                    currentElement = $scope.selectedProject.sessionList[i];
+                    if (currentElement.id == sessionId) {
+                        $scope.selectedProject.currentSession = currentElement;
+                        break;
+                    }
+                }
             };
 
 
@@ -273,7 +213,7 @@ define(['app'], function(app)
                         'actionName' : 'end'
                     },
                     {
-                        'sessionId' : $scope.selectedProject.currentSession.id
+                        'session' : $scope.selectedProject.currentSession
                     },
                     function (promise) {
                         if (!promise.response) {
@@ -284,16 +224,17 @@ define(['app'], function(app)
 
                         if (data) {
                             var totalAmount = 0;
+                            var currentElement;
                             $scope.totalAmount = 0;
                             $scope.selectedProject.currentSession = data;
-                            $scope.selectedProject.sessionList.map(function(element) {
-                                if (element.id == data.id) {
-                                    for (var i in data) {
-                                        element[i] = data[i];
-                                    }
+
+                            for (var i in $scope.selectedProject.sessionList) {
+                                if ($scope.selectedProject.sessionList[i].id == data.id) {
+                                    $scope.selectedProject.sessionList[i] = data;
                                 }
-                                totalAmount += parseFloat(element.timeDiff);
-                            });
+                                totalAmount += parseFloat($scope.selectedProject.sessionList[i].timeDiff);
+                            }
+
                             // from minutes to hours
                             totalAmount = totalAmount / 60;
                             $scope.totalAmount = totalAmount.toPrecision(2);
@@ -324,8 +265,8 @@ define(['app'], function(app)
 
                         if (data) {
                             $scope.currentSession = data;
-                            $scope.selectedProject.sessionList.push($scope.currentSession);
-                            $scope.selectedProject.totalSessionList.push($scope.currentSession);
+                            $scope.selectedProject.sessionList[$scope.currentSession.id] = $scope.currentSession;
+                            $scope.selectedProject.totalSessionList[$scope.currentSession.id] = $scope.currentSession;
                         }
                     }
 
@@ -376,20 +317,23 @@ define(['app'], function(app)
                         var tmpAmount = 0;
                         var set  = {};
                         var timestring ='';
+                        var currentElement;
 
-                        $scope.selectedProject.sessionList.map(function(element) {
-                            if (element.timeDiff && element.startTime) {
-                                tmpAmount += element.timeDiff;
+                        for (var i in $scope.selectedProject.sessionList) {
+                            currentElement = $scope.selectedProject.sessionList[i];
 
-                                var time = new Date(element.startTime.replace(' ', 'T'));
+                            if (currentElement.timeDiff && currentElement.startTime) {
+                                tmpAmount += currentElement.timeDiff;
+
+                                var time = new Date(currentElement.startTime.replace(' ', 'T'));
                                 timestring = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
                                 if (set[timestring] === undefined) {
-                                    set[timestring] = element.timeDiff;
+                                    set[timestring] = currentElement.timeDiff;
                                 } else {
-                                    set[timestring] += element.timeDiff;
+                                    set[timestring] += currentElement.timeDiff;
                                 }
                             }
-                        });
+                        }
 
                         var timeSet = [];
                         for (var i in set) {

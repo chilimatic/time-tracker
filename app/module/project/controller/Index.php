@@ -13,6 +13,7 @@ use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\project\model\Project;
 use timetracker\app\module\project\model\UserProjectMap;
 use timetracker\app\module\session\model\Session;
+use timetracker\app\module\session\model\SessionDescription;
 
 /**
  * Class Index
@@ -79,7 +80,7 @@ class Index extends Application
             return;
         }
 
-        $sessionData = $em->findBy(
+        $sessionDataList = $em->findBy(
             new Session(),
             [
                 'project_id' => $project->getId(),
@@ -87,7 +88,40 @@ class Index extends Application
             ]
         );
 
+        // template structure
+        $idSet = [];
+        $sessionDataMap = [];
 
+        /**
+         * @var Session $session
+         */
+        foreach ($sessionDataList as $session)
+        {
+            $id = $session->getId();
+            $idSet[] = $id;
+            $sessionDataMap[$id] = $session;
+        }
+
+        $idSetString = implode(',', $idSet);
+        $query = "SELECT * FROM `session_description` WHERE `session_id` IN ($idSetString)";
+        unset($idSet);
+
+        /**
+         * @var \PDOStatement $stmt
+         */
+        $stmt = $em->db->query($query);
+        $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $sessionDescription = new SessionDescription();
+
+        foreach ($result as $row) {
+            $sd = clone $sessionDescription;
+            $sd->setText($row['text']);
+            $sd->setSessionId($row['session_id']);
+            $sd->setCreated($row['created']);
+            $sd->setModified($row['modified']);
+
+            $sessionDataMap[$row['session_id']]->setSessionDescription($sd);
+        }
 
         $this->successMessage(
             'project-loaded',
@@ -95,7 +129,7 @@ class Index extends Application
             null,
             [
                 'project'       => $project,
-                'sessionList'   => $sessionData
+                'sessionList'   => $sessionDataMap
             ]
         );
     }

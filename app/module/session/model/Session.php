@@ -62,6 +62,12 @@ class Session extends AbstractModel
     private $modified;
 
     /**
+     * this will just be injected atm the frameworks does not support this atm
+     * @var SessionDescription
+     */
+    private $sessionDescription;
+
+    /**
      * @return int
      */
     public function getId()
@@ -238,18 +244,35 @@ class Session extends AbstractModel
     }
 
     /**
+     * @return SessionDescription
+     */
+    public function getSessionDescription()
+    {
+        return $this->sessionDescription;
+    }
+
+    /**
+     * @param SessionDescription $sessionDescription
+     */
+    public function setSessionDescription($sessionDescription)
+    {
+        $this->sessionDescription = $sessionDescription;
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize()
     {
         return [
-            'id'            => $this->id,
-            'user_id'       => $this->user_id,
-            'project_id'    => $this->project_id,
-            'done'          => $this->done,
-            'startTime'     => $this->start_time,
-            'endTime'       => $this->end_time,
-            'timeDiff'      => $this->time_diff
+            'id'                    => $this->id,
+            'user_id'               => $this->user_id,
+            'project_id'            => $this->project_id,
+            'done'                  => $this->done,
+            'startTime'             => $this->start_time,
+            'endTime'               => $this->end_time,
+            'timeDiff'              => $this->time_diff,
+            'sessionDescription'    => $this->sessionDescription
         ];
     }
 }

@@ -6,7 +6,7 @@ var PROJECT_BASE_URL = '/project';
  */
 define(['route', 'service/resolver'], function(routing, resolver)
 {
-    var app = angular.module('timetracker-frontend', ['ngResource', 'ngRoute', '720kb.datepicker', 'nvd3']);
+    var app = angular.module('timetracker-frontend', ['ngResource', 'ngRoute', '720kb.datepicker']);
     /**
      * lazy loading approach with require.js
      */
