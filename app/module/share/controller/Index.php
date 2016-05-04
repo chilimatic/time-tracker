@@ -2,7 +2,7 @@
 namespace timetracker\app\module\share\controller;
 
 
-use chilimatic\lib\di\ClosureFactory;
+use chilimatic\lib\Di\ClosureFactory;
 use timetracker\app\module\main\controller\Application;
 
 class Index extends Application

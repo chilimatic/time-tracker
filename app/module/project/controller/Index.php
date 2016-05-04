@@ -8,7 +8,7 @@
 namespace timetracker\app\module\project\controller;
 
 use chilimatic\lib\database\sql\orm\EntityManager;
-use chilimatic\lib\di\ClosureFactory;
+use chilimatic\lib\Di\ClosureFactory;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\project\model\Project;
 use timetracker\app\module\project\model\UserProjectMap;

@@ -3,7 +3,19 @@
 /**
  * Service Collection for the application
  */
-    return
+use chilimatic\lib\Cache\Engine\CacheFactory;
+use chilimatic\lib\Database\Sql\Mysql\Connection\MySQLConnection;
+use chilimatic\lib\Database\Sql\Mysql\Connection\MySQLConnectionSettings;
+use chilimatic\lib\Database\Sql\Mysql\MySQL;
+use chilimatic\lib\Database\Sql\Mysql\Querybuilder\MySQLQueryBuilder;
+use chilimatic\lib\Database\Sql\Orm\EntityManager;
+use chilimatic\lib\Di\ClosureFactory;
+use chilimatic\lib\error\Handler;
+use chilimatic\lib\formatter\Log;
+use chilimatic\lib\log\client\PrintOutWebTemplate;
+use chilimatic\lib\log\client\ToFile;
+
+return
     [
         'config' => function($setting = []) {
             return \chilimatic\lib\config\Config::getInstance($setting);
@@ -36,11 +48,11 @@
             return new chilimatic\lib\view\resolver\templatePathStack($setting);
         },
         'cache' => function($setting = []) {
-            return chilimatic\lib\cache\engine\CacheFactory::make($setting['type'], isset($setting['setting']) ? $setting['setting'] : null);
+            return CacheFactory::make($setting['type'], isset($setting['setting']) ? $setting['setting'] : null);
         },
         'entity-manager' => function($setting = []) {
-            $connection = new \chilimatic\lib\database\sql\mysql\connection\MySQLConnection(
-                new \chilimatic\lib\database\sql\mysql\connection\MySQLConnectionSettings(
+            $connection = new MySQLConnection(
+                new MySQLConnectionSettings(
                     $setting['host'],
                     $setting['username'],
                     $setting['password'],
@@ -50,10 +62,10 @@
                 )
             );
 
-            $queryBuilder = \chilimatic\lib\di\ClosureFactory::getInstance()->get('query-builder', ['db' => new \chilimatic\lib\database\sql\mysql\Mysql($connection)]);
+            $queryBuilder = ClosureFactory::getInstance()->get('query-builder', ['db' => new Mysql($connection)]);
 
-            $em = new \chilimatic\lib\database\sql\orm\EntityManager(
-                new \chilimatic\lib\database\sql\mysql\Mysql($connection),
+            $em = new EntityManager(
+                new Mysql($connection),
                 $queryBuilder
             );
 
@@ -61,15 +73,15 @@
         },
         'query-builder' => function($setting = [])
         {
-            $config = \chilimatic\lib\di\ClosureFactory::getInstance()->get('config');
+            $config = ClosureFactory::getInstance()->get('config');
 
             $cacheType = empty($setting['cache']['type']) ? $config->get('query_builder_cache') : $setting['cache']['type'];
             $cacheSettings = empty($setting['cache']['setting']) ? $config->get('query_builder_cache_setting') : $setting['cache']['setting'];
 
             $db = empty($setting['db']) ? $this->get('db') : $setting['db'];
 
-            $queryBuilder = new \chilimatic\lib\database\sql\mysql\querybuilder\MySQLQueryBuilder(
-                \chilimatic\lib\di\ClosureFactory::getInstance()->get('cache',
+            $queryBuilder = new MySQLQueryBuilder(
+                ClosureFactory::getInstance()->get('cache',
                     [
                         'type' => $cacheType,
                         'setting' => $cacheSettings
@@ -81,30 +93,30 @@
         },
         'error-handler' => function($setting = []) {
             if (!empty($setting['debug'])) {
-                $client = new \chilimatic\lib\log\client\PrintOutWebTemplate();
+                $client = new PrintOutWebTemplate();
             } else {
-                $config = \chilimatic\lib\di\ClosureFactory::getInstance()->get('config');
-                $client = new \chilimatic\lib\log\client\ToFile();
+                $config = ClosureFactory::getInstance()->get('config');
+                $client = new ToFile();
                 $client->setTargetFile(
                     $config->get('error_log_path') . DIRECTORY_SEPARATOR . 'error' . DIRECTORY_SEPARATOR . date('Y-m-d')
                 );
             }
-            return new \chilimatic\lib\error\Handler($client);
+            return new Handler($client);
         },
         'authentication-service' => function($setting = []) {
             return new \timetracker\app\module\user\service\Authentification();
         },
         'log' => function($setting = []) {
-            return new \chilimatic\lib\log\client\ToFile(
-                new \chilimatic\lib\formatter\Log()
+            return new ToFile(
+                new Log()
             );
         },
         'error-log' => function($setting = []) {
             /**
-             * @var \chilimatic\lib\log\client\ToFile $logger
+             * @var ToFile $logger
              */
-            $logger = \chilimatic\lib\di\ClosureFactory::getInstance()->get('log');
-            $config  = \chilimatic\lib\di\ClosureFactory::getInstance()->get('config');
+            $logger = ClosureFactory::getInstance()->get('log');
+            $config  = ClosureFactory::getInstance()->get('config');
 
             $logger->setTargetFile(
                 $config->get('error_log_path')

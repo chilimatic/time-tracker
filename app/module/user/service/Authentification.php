@@ -11,7 +11,7 @@ namespace timetracker\app\module\user\service;
  */
 
 
-use chilimatic\lib\di\ClosureFactory;
+use chilimatic\lib\Di\ClosureFactory;
 use timetracker\app\module\user\decorator\User;
 
 /**

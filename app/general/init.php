@@ -1,5 +1,11 @@
 <?php
 
+use chilimatic\lib\Database\Sql\Mysql\Connection\MySQLConnection;
+use chilimatic\lib\Database\Sql\Mysql\Connection\MySQLConnectionSettings;
+use chilimatic\lib\Database\Sql\Mysql\Connection\MySQLConnectionStorage;
+use chilimatic\lib\Database\Sql\Mysql\MySQL;
+use chilimatic\lib\Database\Sql\Orm\EntityManager;
+
 date_default_timezone_set('Europe/Vienna');
 set_exception_handler(function($e)
 {
@@ -12,7 +18,7 @@ set_exception_handler(function($e)
 
 try
 {
-    $dispatcher = \chilimatic\lib\di\ClosureFactory::getInstance(
+    $dispatcher = \chilimatic\lib\Di\ClosureFactory::getInstance(
         realpath(APPLICATION_PATH . '/app/config/serviceCollection.php')
     );
 
@@ -52,8 +58,8 @@ try
     $dispatcher->set('db', function() use ($dispatcher) {
         $config = $dispatcher->get('config');
 
-        $mysqlStorage = new \chilimatic\lib\database\sql\mysql\connection\MySQLConnectionStorage();
-        $mysqlConnectionSettings = new \chilimatic\lib\database\sql\mysql\connection\MySQLConnectionSettings(
+        $mysqlStorage = new MySQLConnectionStorage();
+        $mysqlConnectionSettings = new MySQLConnectionSettings(
             $config->get('mysql_db_host'),
             $config->get('mysql_db_user'),
             $config->get('mysql_db_password'),
@@ -61,9 +67,9 @@ try
             null
         );
 
-        $mysqlConnection = new \chilimatic\lib\database\sql\mysql\connection\MySQLConnection(
+        $mysqlConnection = new MySQLConnection(
             $mysqlConnectionSettings,
-            \chilimatic\lib\database\sql\mysql\connection\MySQLConnection::CONNECTION_PDO
+            MySQLConnection::CONNECTION_PDO
         );
 
         $mysqlStorage->addConnection($mysqlConnection);
@@ -78,12 +84,12 @@ try
         $queryBuilder = $dispatcher->get(
             'query-builder',
             [
-                'db' => new \chilimatic\lib\database\sql\mysql\MySQL($master)
+                'db' => new MySQL($master)
             ]
         );
 
-        $em = new \chilimatic\lib\database\sql\orm\EntityManager(
-            new \chilimatic\lib\database\sql\mysql\MySQL($master),
+        $em = new EntityManager(
+            new MySQL($master),
             $queryBuilder
         );
         return $em;

@@ -31,7 +31,7 @@ class UserSettings extends Application
      */
     public function indexAction()
     {
-        $em = \chilimatic\lib\di\ClosureFactory::getInstance()->get('entity-manager');
+        $em = \chilimatic\lib\Di\ClosureFactory::getInstance()->get('entity-manager');
         $phtml = new \chilimatic\lib\view\PHtml();
 
 

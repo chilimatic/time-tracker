@@ -11,7 +11,12 @@
   ],
   "require": {
     "php": ">=5.4",
-    "chilimatic/framework" : "master"
+    "chilimatic/framework" : "master",
+    "chilimatic/interfaces-component" : "1.*",
+    "chilimatic/transformer-component": "1.*",
+    "chilimatic/parser-component": "1.*",
+    "chilimatic/di-component": "1.*",
+    "chilimatic/database-component": "dev-master"
   },
   "minimum-stability" : "dev",
   "autoload": {

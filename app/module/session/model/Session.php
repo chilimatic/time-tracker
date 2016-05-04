@@ -6,7 +6,7 @@
  */
 
 namespace timetracker\app\module\session\model;
-use chilimatic\lib\database\sql\orm\AbstractModel;
+use chilimatic\lib\Database\Model\AbstractModel;
 
 /**
  * Class Session

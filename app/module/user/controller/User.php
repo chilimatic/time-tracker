@@ -10,7 +10,7 @@ namespace timetracker\app\module\user\controller;
 
 use chilimatic\lib\database\sql\orm\EntityManager;
 use timetracker\app\module\main\controller\Application;
-use chilimatic\lib\di\ClosureFactory;
+use chilimatic\lib\Di\ClosureFactory;
 use timetracker\app\module\user\model\User as UserModel;
 
 /**

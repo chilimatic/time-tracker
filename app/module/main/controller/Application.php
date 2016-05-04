@@ -11,7 +11,7 @@
 namespace timetracker\app\module\main\controller;
 
 use chilimatic\lib\controller\HTTPController;
-use chilimatic\lib\di\ClosureFactory;
+use chilimatic\lib\Di\ClosureFactory;
 use chilimatic\lib\view\AbstractView;
 
 class Application extends HTTPController

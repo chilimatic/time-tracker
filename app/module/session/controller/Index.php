@@ -2,7 +2,7 @@
 namespace timetracker\app\module\session\controller;
 
 use chilimatic\lib\database\sql\orm\EntityManager;
-use chilimatic\lib\di\ClosureFactory;
+use chilimatic\lib\Di\ClosureFactory;
 use chilimatic\lib\transformer\time\DateDiffToDecimalTime;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\session\model\Session;
@@ -131,28 +131,29 @@ GROUP BY
 
         if (array_key_exists('sessionDescription', $sessionRequest))
         {
-            $sessionDescription = new SessionDescription();
+            $sessionDescriptionModel = new SessionDescription();
 
 
             if (!isset($sessionRequest['sessionDescription']['session_id'])) {
-                $sessionDescription->setSessionId($session->getId());
-                $sessionDescription->setText($sessionRequest['sessionDescription']['text']);
-                $sessionDescription->setCreated(date('Y-m-d H:i:s'));
-                $sessionDescription->setModified(date('Y-m-d H:i:s'));
-                if (!$em->persist($sessionDescription)) {
+                $sessionDescriptionModel->setSessionId($session->getId());
+                $sessionDescriptionModel->setText($sessionRequest['sessionDescription']['text']);
+                $sessionDescriptionModel->setCreated(date('Y-m-d H:i:s'));
+                $sessionDescriptionModel->setModified(date('Y-m-d H:i:s'));
+                if (!$em->persist($sessionDescriptionModel)) {
                     $this->errorMessage('session-text-error', _('Session Description could not be saved'));
                 }
             } else {
-                $sessionDescriptionModel = $em->findOneBy($sessionDescription, [
+                $sessionDescriptionModel = $em->findOneBy($sessionDescriptionModel, [
                     'session_id' => (int) $sessionRequest['sessionDescription']['session_id']
                 ]);
                 $sessionDescriptionModel->setText($sessionRequest['sessionDescription']['text']);
                 $sessionDescriptionModel->setModified(date('Y-m-d H:i:s'));
 
-                if (!$em->persist($sessionDescription)) {
+                if (!$em->persist($sessionDescriptionModel)) {
                     $this->errorMessage('session-text-error', _('Session Description could not be saved'));
                 }
             }
+            $session->setSessionDescription($sessionDescriptionModel);
         }
 
         $endTime = new \DateTime('now');

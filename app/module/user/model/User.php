@@ -6,7 +6,7 @@
  * Time: 23:21
  */
 namespace timetracker\app\module\user\model;
-use chilimatic\lib\database\sql\orm\AbstractModel;
+use chilimatic\lib\Database\Model\AbstractModel;
 
 /**
  * Class User
