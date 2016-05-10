@@ -1,0 +1,33 @@
+paths:
+    migrations: %%PHINX_CONFIG_DIR%%/migration/
+    seeds: %%PHINX_CONFIG_DIR%%/migration/seeds
+
+environments:
+    default_migration_table: time_tracker_migration
+    default_database: production
+    production:
+        adapter: mysql
+        host: localhost
+        name: time_tracker
+        user: time-tracker
+        pass: 'Aef8naelWohGho4lAecu9chaOoHu3soh'
+        port: 3306
+        charset: utf8
+
+    development:
+        adapter: mysql
+        host: localhost
+        name: time_tracker
+        user: time-tracker
+        pass: 'Aef8naelWohGho4lAecu9chaOoHu3soh'
+        port: 3306
+        charset: utf8
+
+    testing:
+        adapter: mysql
+        host: localhost
+        name: time_tracker
+        user: time-tracker
+        pass: 'Aef8naelWohGho4lAecu9chaOoHu3soh'
+        port: 3306
+        charset: utf8
