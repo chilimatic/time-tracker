@@ -16,7 +16,12 @@
     "chilimatic/transformer-component": "1.*",
     "chilimatic/parser-component": "1.*",
     "chilimatic/di-component": "1.*",
-    "chilimatic/database-component": "dev-master"
+    "chilimatic/database-component": "dev-master",
+    "robmorgan/phinx": "0.5.*"
+  },
+  "config": {
+    "bin-dir": "bin/",
+    "vendor-dir": "vendor"
   },
   "minimum-stability" : "dev",
   "autoload": {
