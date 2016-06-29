@@ -8,6 +8,7 @@
  * File: usersettings.class.php
  */
 namespace timetracker\app\module\user\controller;
+use chilimatic\lib\Config\Config;
 use timetracker\app\module\main\controller\Application;
 use chilimatic\lib\view\AbstractView;
 
@@ -40,7 +41,7 @@ class UserSettings extends Application
             'data' => [
                 'title' => 'Settings',
                 'jsController' => 'SettingManager',
-                'content' => $phtml->render(\chilimatic\lib\config\Config::get('document_root') . '/app/view/admin/user/settings.phtml')
+                'content' => $phtml->render(Config::get('document_root') . '/app/view/admin/user/settings.phtml')
             ],
             'call' => 'initWindow'
         ];

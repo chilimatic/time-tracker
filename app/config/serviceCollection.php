@@ -18,7 +18,7 @@ use chilimatic\lib\log\client\ToFile;
 return
     [
         'config' => function($setting = []) {
-            return \chilimatic\lib\config\Config::getInstance($setting);
+            return \chilimatic\lib\Config\Config::getInstance($setting);
         },
         'view' => function($setting = []) {
             return new \chilimatic\lib\view\PHtml();
@@ -37,7 +37,7 @@ return
             return new chilimatic\lib\handler\HTTPHandler($setting);
         },
         'routing' => function($setting = []) {
-            return new \chilimatic\lib\route\Router($setting['type']);
+            return new \chilimatic\lib\Route\Router($setting['type']);
         },
         'session' => function($setting = []){
             return new chilimatic\lib\session\handler\Session(

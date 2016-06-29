@@ -10,12 +10,13 @@
     }
   ],
   "require": {
-    "php": ">=5.4",
-    "chilimatic/framework" : "master",
-    "chilimatic/interfaces-component" : "1.*",
-    "chilimatic/transformer-component": "1.*",
-    "chilimatic/parser-component": "1.*",
-    "chilimatic/di-component": "1.*",
+    "php": ">=7",
+    "chilimatic/framework" : "dev-feature/compoment-splitting",
+    "chilimatic/interfaces-component" : "2.*",
+    "chilimatic/transformer-component": "2.*",
+    "chilimatic/parser-component": "2.*",
+    "chilimatic/di-component": "2.*",
+    "chilimatic/cache-component": "2.*",
     "chilimatic/database-component": "dev-master",
     "robmorgan/phinx": "0.5.*"
   },

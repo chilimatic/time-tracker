@@ -27,7 +27,7 @@ try
      */
     $config = $dispatcher->get('config', [
         'type' => 'File',
-        \chilimatic\lib\config\File::CONFIG_PATH_INDEX => APPLICATION_PATH . '/app/config/'
+        \chilimatic\lib\Config\File::CONFIG_PATH_INDEX => APPLICATION_PATH . '/app/config/'
     ]);
 
     /**
@@ -78,8 +78,7 @@ try
 
     $dispatcher->set('entity-manager', function() use ($dispatcher) {
         $mysqlStorage = $dispatcher->get('db');
-
-
+        
         $master = $mysqlStorage->getConnectionByPosition(0);
         $queryBuilder = $dispatcher->get(
             'query-builder',

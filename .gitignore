@@ -7,3 +7,4 @@ web/vendor/*
 web/js/assets
 web/css/assets
 npm-debug.log
+bin

@@ -7,7 +7,7 @@
  */
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-ini_set("display_errors", 1);
+ini_set("display_errors", 0);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -26,9 +26,8 @@ try {
     $application->init();
     echo $application->getHandler()->getContent();
 }
-catch (Exception $e)
+catch (Throwable $e)
 {
-
     if (isset($dispatcher)) {
         /**
          * @var $eh \chilimatic\lib\error\Handler
