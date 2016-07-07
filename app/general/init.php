@@ -6,6 +6,56 @@ use chilimatic\lib\Database\Sql\Mysql\Connection\MySQLConnectionStorage;
 use chilimatic\lib\Database\Sql\Mysql\MySQL;
 use chilimatic\lib\Database\Sql\Orm\EntityManager;
 
+function myErrorHandler($errno, $errstr, $errfile, $errline)
+{
+
+    static $eh;
+    if (!$eh) {
+        $di = \chilimatic\lib\Di\ClosureFactory::getInstance();
+        /**
+         * @var $eh \chilimatic\lib\error\Handler
+         */
+        $eh = $di->get(
+            'error-handler',
+            [
+                'debug' => $di->get(
+                    'active-config'
+                )->get('debug')
+            ],
+            true
+        )->getClient();
+    }
+
+    $str = '';
+
+    switch ($errno) {
+        case E_USER_ERROR:
+            $str .= "<b>My ERROR</b> [$errno] $errstr<br />\n";
+            $str .= "  Fatal error on line $errline in file $errfile";
+            $str .=", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+            $str .= "Aborting...<br />\n";
+            break;
+
+        case E_USER_WARNING:
+            $str .= "<b>My WARNING</b> [$errno] $errstr<br />\n";
+            break;
+
+        case E_USER_NOTICE:
+            $str .= "<b>My NOTICE</b> [$errno] $errstr<br />\n";
+            break;
+
+        default:
+            $str .= "Unknown error type: [$errno] $errstr<br />\n";
+            $str .= "$errfile: [$errline]<br />\n";
+            break;
+    }
+
+    $eh->log($str)->send();
+
+    /* Don't execute PHP internal error handler */
+    return true;
+}
+
 date_default_timezone_set('Europe/Vienna');
 set_exception_handler(function($e)
 {
@@ -29,6 +79,13 @@ try
         'type' => 'File',
         \chilimatic\lib\Config\File::CONFIG_PATH_INDEX => APPLICATION_PATH . '/app/config/'
     ]);
+
+    $dispatcher->set('active-config', function($setting = []) use ($config) {
+        return $config;
+    });
+
+    // important ! it has to be set after the active config has been created
+    set_error_handler('myErrorHandler');
 
     /**
      * Set default timezone based on the config
