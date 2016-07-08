@@ -210,8 +210,13 @@ header {
     padding: 1em;
     color: $color-primary-0;
     background-color: #d0e5f5;
-    margin: 1em 0;
+    margin: 0.4em 0;
     font-size: 1.2em;
+
+    .stop-session {
+      border-radius: 5em;
+      height: 2.7em;
+    }
 
 
     &.active {
@@ -366,4 +371,33 @@ header {
 
   }
 
+}
+
+.data {
+  li {
+    display: inline-block;
+  }
+}
+
+.label {
+  font-weight: bold;
+  color: #333;
+}
+
+.start-session-button {
+  border-radius: 9em;
+  bottom: 22px;
+  height: 5.1em;
+  opacity: 0.8;
+  position: fixed;
+  right: 49px;
+  z-index: 9999;
+}
+
+.start-session-button:hover {
+  opacity: 1;
+}
+
+.time-tracker-container {
+  margin-bottom: 11em;
 }

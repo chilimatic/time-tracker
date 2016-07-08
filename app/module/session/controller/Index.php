@@ -3,10 +3,11 @@ namespace timetracker\app\module\session\controller;
 
 use chilimatic\lib\database\sql\orm\EntityManager;
 use chilimatic\lib\Di\ClosureFactory;
-use chilimatic\lib\transformer\time\DateDiffToDecimalTime;
+use chilimatic\lib\Transformer\Time\DateDiffToDecimalTime;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\session\model\Session;
 use timetracker\app\module\session\model\SessionDescription;
+use timetracker\app\module\session\service\SessionService;
 
 class Index extends Application
 {
@@ -44,7 +45,8 @@ class Index extends Application
         }
     }
 
-    public function getUserStatisticAction()
+    
+    public function saveSessionAction()
     {
         if (!$this->loadUserFromSession()) {
             $this->errorMessage('login-needed', _('please login!'), null, ['logout' => true]);
@@ -52,52 +54,29 @@ class Index extends Application
         }
 
         $request = ClosureFactory::getInstance()->get('request-handler', []);
-        $result = [];
-
-
-
-        $month = $request->getGet()->get('month', 'string', date('m'));
-        $year = $request->getGet()->get('year', 'string', date('Y'));
-
-        /**
-         * @var EntityManager $em
-         */
-        $db = ClosureFactory::getInstance()->get('db');
-        $con = $db->getConnectionByPosition(0);
-        $dbh = $con->getDbAdapter();
-        $dbh->beginTransaction();
-        $stmt = $dbh->prepare("
-SELECT 
-  project_id, MONTH(start_time) AS sessionMonth, DAY(start_time) AS sessionDay, SUM(time_diff) AS hour_sum FROM `session` 
-WHERE 
-  user_id = :userId AND MONTH(start_time) = :month AND YEAR(start_time) = :year
-GROUP BY 
-  sessionDay, sessionMonth"
-        );
-
-
-        $stmt->bindValue('userId', $this->getUser()->getUserId(), \PDO::PARAM_INT);
-        $stmt->bindValue('year', $year, \PDO::PARAM_INT);
-        $stmt->bindValue('month', $month, \PDO::PARAM_INT);
-
-
-        if ($stmt->execute()) {
-            $set = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-            /**
-             * @var array $entry
-             */
-            foreach ($set as $entry) {
-                $result[] = [
-                    'key' => "{$entry['sessionMonth']}-{$entry['sessionDay']}",
-                    'values' => [['x' => $entry['sessionDay'], 'y' => (float) $entry['hour_sum']]]
-                ];
-            }
+        if (!$request->getRaw()) {
+            $this->errorMessage('error', _('no request data'));
+            return;
         }
 
+        $sessionRequest =  $request->getRaw()->get('session', null, null);
 
-        $this->getView()->timeDiff = $result;
+        if (!$sessionRequest) {
+            $this->errorMessage('session-end-failed', _('Session data is empty'));
+        }
+        $sessionService = new SessionService(ClosureFactory::getInstance());
+
+        $session = $sessionService->save($sessionRequest);
+
+
+        if ($session) {
+            $this->successMessage('session-ended', _('Session successfully ended!'), null, $session);
+        } else {
+            $this->errorMessage('session-end-failed', _('Session could not be ended!'));
+        }
     }
+    
+    
 
     public function endAction()
     {
@@ -112,60 +91,22 @@ GROUP BY
             return;
         }
 
-        /**
-         * @var EntityManager $em
-         */
-        $em = ClosureFactory::getInstance()->get('entity-manager');
         $sessionRequest =  $request->getRaw()->get('session', null, null);
 
-        /**
-         * @var Session $session
-         */
-        $session = $em->findOneBy(new Session(), ['id' => (int) $sessionRequest['id']]);
-
-        if (!$session->getId()) {
-            $this->errorMessage('error', _('no session found'));
-            return;
+        if (!$sessionRequest) {
+            $this->errorMessage('session-end-failed', _('Session data is empty'));
         }
-
-
-        if (array_key_exists('sessionDescription', $sessionRequest))
-        {
-            $sessionDescriptionModel = new SessionDescription();
-
-
-            if (!isset($sessionRequest['sessionDescription']['session_id'])) {
-                $sessionDescriptionModel->setSessionId($session->getId());
-                $sessionDescriptionModel->setText($sessionRequest['sessionDescription']['text']);
-                $sessionDescriptionModel->setCreated(date('Y-m-d H:i:s'));
-                $sessionDescriptionModel->setModified(date('Y-m-d H:i:s'));
-                if (!$em->persist($sessionDescriptionModel)) {
-                    $this->errorMessage('session-text-error', _('Session Description could not be saved'));
-                }
-            } else {
-                $sessionDescriptionModel = $em->findOneBy($sessionDescriptionModel, [
-                    'session_id' => (int) $sessionRequest['sessionDescription']['session_id']
-                ]);
-                $sessionDescriptionModel->setText($sessionRequest['sessionDescription']['text']);
-                $sessionDescriptionModel->setModified(date('Y-m-d H:i:s'));
-
-                if (!$em->persist($sessionDescriptionModel)) {
-                    $this->errorMessage('session-text-error', _('Session Description could not be saved'));
-                }
-            }
-            $session->setSessionDescription($sessionDescriptionModel);
-        }
-
-        $endTime = new \DateTime('now');
-        $startTime = new \DateTime($session->getStartTime());
-        $diff = $startTime->diff($endTime);
-        $session->setEndTime($endTime->format('Y-m-d H:i:s'));
+        $sessionService = new SessionService(ClosureFactory::getInstance());
         $transformer = new DateDiffToDecimalTime();
 
+        $endTime = new \DateTime('now');
+        $startTime = new \DateTime($sessionRequest['startTime']);
 
-        $session->setTimeDiff($transformer->transform($diff));
-
-        if ($em->persist($session)) {
+        $sessionRequest['endTime'] = $endTime->format('Y-m-d H:i:s');
+        $sessionRequest['startTime'] = $startTime->format('Y-m-d H:i:s');
+        $sessionRequest['timeDiff'] = $transformer->transform($startTime->diff($endTime));
+        $session = $sessionService->save($sessionRequest);
+        if ($session) {
             $this->successMessage('session-ended', _('Session successfully ended!'), null, $session);
         } else {
             $this->errorMessage('session-end-failed', _('Session could not be ended!'));

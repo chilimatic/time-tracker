@@ -132,7 +132,7 @@ class Session extends AbstractModel
      */
     public function isDone()
     {
-        return $this->done;
+        return (bool) $this->done;
     }
 
     /**
@@ -268,7 +268,7 @@ class Session extends AbstractModel
             'id'                    => $this->id,
             'user_id'               => $this->user_id,
             'project_id'            => $this->project_id,
-            'done'                  => $this->done,
+            'done'                  => (bool) $this->done,
             'startTime'             => $this->start_time,
             'endTime'               => $this->end_time,
             'timeDiff'              => $this->time_diff,

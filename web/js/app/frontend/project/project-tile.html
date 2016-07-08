@@ -1,4 +1,10 @@
-<div ng-if="project.id" ng-click="selectProject(project)" ng-class="{'list col-lg-3': setting.listView, 'col-lg-5' : !setting.listView}" class=" project" ng-repeat="project in projectList">
+<div
+        class=" project"
+        ng-if="project.id"
+        ng-click="selectProject(project)"
+        ng-class="{'list col-lg-3': setting.listView, 'col-lg-12' : !setting.listView}"
+        ng-repeat="project in projectList|filter : filterTerm"
+>
     <div class="project-label col-xs-3">
         <i class="glyphicon glyphicon-book"></i>
     </div>

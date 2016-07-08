@@ -1,0 +1,54 @@
+
+<div class="session">
+    <div class="row">
+        <div class="col-xs-3 col-lg-1">
+            <i style="font-size: 2em" class="glyphicon glyphicon-time"></i>
+        </div>
+        <div class="col-xs-8 col-lg-9 data">
+            <ul>
+                <li>
+                    <ul class="col-group">
+                        <li class="label">start:</li>
+                        <li>{{::session.startTime}}</li>
+                    </ul>
+                </li>
+                <li>
+                    <ul class="col-group">
+                        <li class="label">end:</li>
+                        <li>{{session.endTime}}</li>
+                    </ul>
+                </li>
+                <li>
+                    <ul class="col-group">
+                        <li class="label">amount:</li>
+                        <li>{{session.timeDiff}} Minutes</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-xs-2 col-lg-2">
+            <button class="btn btn-success stop-session" ng-click="extended = !extended">
+                <i class="glyphicon glyphicon-pencil"></i>
+            </button>
+            <button class="btn btn-danger stop-session" ng-click="endSession(session)" ng-if="!session.endTime || session.endTime == '0000-00-00 00:00:00'">
+                <i class="glyphicon glyphicon-stop"></i>
+            </button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div ng-if="extended" class="row">
+        <hr>
+        <div class="col-lg-12">
+            <textarea class="col-lg-12" ng-model="session.sessionDescription.text"></textarea>
+            <ul>
+                <li><label for="booked"><input id="booked" type="checkbox" ng-model="session.done" /> Booked</label></li>
+            </ul>
+            <div class="col-lg-offset-11">
+                <button class="btn btn-success stop-session" ng-click="saveSession(session)">
+                    <i class="glyphicon glyphicon-check"></i> save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

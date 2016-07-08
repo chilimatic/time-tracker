@@ -134,11 +134,13 @@ define(['app'], function(app) {
                 restrict : 'E',
                 scope : {
                     projectList : '=',
-                    setting     : "="
+                    setting     : "=",
+                    filterTerm  : "="
                 },
                 templateUrl : '/js/app/frontend/project/project-tile.html',
                 controller : ['$scope', '$location', 'project', function($scope, $location, project)
                 {
+                    
                     $scope.menuList = [
                         {
                             'id' : 0,
@@ -243,7 +245,7 @@ define(['app'], function(app) {
 
                                 if (promise.response.success)
                                 {
-                                    var pL = JSON.parse(JSON.stringify($scope.projectList));
+                                    let pL = JSON.parse(JSON.stringify($scope.projectList));
                                     $scope.projectList = [];
                                     for (var i in pL) {
                                         if (projectModel.id == pL[i].id) {
@@ -302,6 +304,23 @@ define(['app'], function(app) {
 
                 }]
             }
-        })
+        });
+
+    app.
+    directive('sessionRow', function() {
+        return {
+            restrict : 'E',
+            scope : {
+                session : '=',
+                endSession : '=',
+                saveSession : '='
+            },
+            templateUrl : '/js/app/frontend/project/project-session-row.html',
+            link : function(scope, element, attr)
+            {
+                scope.extended = false;
+            }
+        }
+    })
 
 });

@@ -20,6 +20,11 @@ define(['app'], function(app)
             $scope.showAddProjectForm = false;
 
             /**
+             * @type {String}
+             */
+            $scope.filterTerm = '';
+
+            /**
              * only objects can 2 way bound
              *
              * @type {{listView: boolean}}
@@ -82,10 +87,19 @@ define(['app'], function(app)
              * @type {{project: {}, sessionList: Array, currentSession: {}}}
              */
             $scope.selectedProject = {
-                'project'           : {},
-                'totalSessionList'  : [],
-                'sessionList'       : [],
-                'currentSession'    : {}
+                project           : {},
+                totalSessionMap   : {},
+                sessionList       : [],
+                currentSession    : {
+                    id                  : null,
+                    user_id             : null,
+                    procject_id         : null,
+                    timeDiff            : 0,
+                    done                : 0,
+                    sessionDescription  : '',
+                    startTime           : '',
+                    endTime             : ''
+                }
             };
 
             /**
@@ -122,23 +136,25 @@ define(['app'], function(app)
                 var currentFrom = $scope.dateRange.from ? new Date($scope.dateRange.from).getTime() : 0;
                 var currentTill = $scope.dateRange.till ? new Date($scope.dateRange.till).getTime() : null;
                 var newSessionList = [];
+                var sessionMap = $scope.selectedProject.totalSessionMap;
 
-                Object.keys($scope.selectedProject).map(
+                Object.keys(sessionMap).map(
                     function(key) {
-                        if (!$scope.selectedProject[key].startTime) {
+                        if (!sessionMap[key].startTime) {
                             return false;
                         }
-                        var elementStartTime = new Date($scope.selectedProject[key].startTime.replace(' ', 'T'));
+                        let elementStartTime = new Date(sessionMap[key].startTime.replace(' ', 'T'));
 
                         // if there is no lower bound or the range requirement is full filled
                         if ((!currentTill || currentTill >= elementStartTime.getTime())
                             &&
                             (!currentFrom || (currentFrom <= elementStartTime.getTime())))
                         {
-                            newSessionList.push($scope.selectedProject[key]);
+                            newSessionList.push(sessionMap[key]);
                         }
                     }
                 );
+
 
                 $scope.selectedProject.sessionList = newSessionList;
                 $scope.calculateTotalDisplayedHours();
@@ -171,8 +187,6 @@ define(['app'], function(app)
                             $scope.taskList[$scope.selectedProject.project.id] = [];
                             $scope.taskList[$scope.selectedProject.project.id].push(task);
                         }
-
-
                     }
                 )
             };
@@ -188,9 +202,14 @@ define(['app'], function(app)
                     return;
                 }
 
-                var currentElement;
-                for (var i in $scope.selectedProject.sessionList) {
-                    currentElement = $scope.selectedProject.sessionList[i];
+                let currentElement;
+                let sessionList = $scope.selectedProject.sessionList;
+                for (var i in sessionList) {
+                    if (!sessionList.hasOwnProperty(i)) {
+                        continue;
+                    }
+
+                    currentElement = sessionList[i];
                     if (currentElement.id == sessionId) {
                         $scope.selectedProject.currentSession = currentElement;
                         break;
@@ -198,47 +217,74 @@ define(['app'], function(app)
                 }
             };
 
-
-            /**
-             * ends the current session
-             */
-            $scope.endSession = function()
-            {
-                if (!$scope.selectedProject.currentSession) {
-                    return;
-                }
-
-                projectSession.end(
+            $scope.saveSession = function(session) {
+                projectSession.save(
                     {
-                        'actionName' : 'end'
+                        'actionName' : 'saveSession'
                     },
                     {
-                        'session' : $scope.selectedProject.currentSession
+                        'session' : session
                     },
                     function (promise) {
                         if (!promise.response) {
                             return;
                         }
 
-                        var data = promise.response.data;
+                        let data = promise.response.data;
 
                         if (data) {
-                            var totalAmount = 0;
-                            var currentElement;
-                            $scope.totalAmount = 0;
-                            $scope.selectedProject.currentSession = data;
+                            $scope.processSavedSession(data);
+                        }
+                    }
+                )
+            };
 
-                            for (var i in $scope.selectedProject.sessionList) {
-                                if ($scope.selectedProject.sessionList[i].id == data.id) {
-                                    $scope.selectedProject.sessionList[i] = data;
-                                }
-                                totalAmount += parseFloat($scope.selectedProject.sessionList[i].timeDiff);
-                            }
+            $scope.processSavedSession = function(data) {
+                var totalAmount = 0;
+                $scope.totalAmount = 0;
+                $scope.selectedProject.currentSession = data;
+                let sessionList = $scope.selectedProject.sessionList.map(function(session){
+                    if (session.id == data.id) {
+                        return data;
+                    }
 
-                            // from minutes to hours
-                            totalAmount = totalAmount / 60;
-                            $scope.totalAmount = totalAmount.toPrecision(2);
+                    totalAmount += parseFloat(session.timeDiff);
+                    return session;
+                });
 
+                // from minutes to hours
+                totalAmount = totalAmount / 60;
+                $scope.totalAmount = totalAmount.toPrecision(2);
+                $scope.selectedProject.sessionList = sessionList;
+            };
+
+
+            /**
+             * ends the current session
+             */
+            $scope.endSession = function(session)
+            {
+                if (!session || !session.id) {
+                    return;
+                }
+
+
+                projectSession.end(
+                    {
+                        'actionName' : 'end'
+                    },
+                    {
+                        'session' : session
+                    },
+                    function (promise) {
+                        if (!promise.response) {
+                            return;
+                        }
+
+                        let data = promise.response.data;
+
+                        if (data) {
+                            $scope.processSavedSession(data);
                         }
 
                     }
@@ -261,12 +307,12 @@ define(['app'], function(app)
                             return;
                         }
 
-                        var data = promise.response.data;
+                        let data = promise.response.data;
 
                         if (data) {
                             $scope.currentSession = data;
-                            $scope.selectedProject.sessionList[$scope.currentSession.id] = $scope.currentSession;
-                            $scope.selectedProject.totalSessionList[$scope.currentSession.id] = $scope.currentSession;
+                            $scope.selectedProject.sessionList.push(data);
+                            $scope.selectedProject.totalSessionMap[$scope.currentSession.id] = data;
                         }
                     }
 
@@ -314,30 +360,30 @@ define(['app'], function(app)
                 // non blocking calculation
                 $timeout(
                     function() {
-                        var tmpAmount = 0;
-                        var set  = {};
-                        var timestring ='';
-                        var currentElement;
-
-                        for (var i in $scope.selectedProject.sessionList) {
+                        let tmpAmount = 0;
+                        let timeSet  = {};
+                        let timeString ='';
+                        let currentElement;
+                        let time;
+                        for (let i in $scope.selectedProject.sessionList) {
                             currentElement = $scope.selectedProject.sessionList[i];
 
                             if (currentElement.timeDiff && currentElement.startTime) {
                                 tmpAmount += currentElement.timeDiff;
 
-                                var time = new Date(currentElement.startTime.replace(' ', 'T'));
-                                timestring = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
-                                if (set[timestring] === undefined) {
-                                    set[timestring] = currentElement.timeDiff;
+                                time = new Date(currentElement.startTime.replace(' ', 'T'));
+                                timeString = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate();
+                                if (timeSet[timeString] === undefined) {
+                                    timeSet[timeString] = currentElement.timeDiff;
                                 } else {
-                                    set[timestring] += currentElement.timeDiff;
+                                    timeSet[timeString] += currentElement.timeDiff;
                                 }
                             }
                         }
 
-                        var timeSet = [];
-                        for (var i in set) {
-                            timeSet.push(i.set)
+                        let newtimeSet = [];
+                        for (var i in timeSet) {
+                            newtimeSet.push(timeSet[i])
                         }
 
                         // from minutes to hours
@@ -356,8 +402,7 @@ define(['app'], function(app)
                 // get the user model
                 $scope.user = login.getUserData();
 
-                var projectName = $location.url().split('/').pop();
-
+                let projectName = $location.url().split('/').pop();
                 project.getDetail(
                     {
                         actionName    : 'get-detail'
@@ -369,13 +414,39 @@ define(['app'], function(app)
                         if (!promise) {
                             return;
                         }
-                        var data = promise.response.data;
+                        let data = promise.response.data;
 
                         if (data.project)
                         {
+
+
+                            let sessionList = Object.keys(data.sessionList)
+                                .map(function(index) {
+                                    if (!data.sessionList[index].sessionDescription) {
+                                        data.sessionList[index].sessionDescription = {};
+                                    }
+
+                                    return data.sessionList[index];
+                                })
+                                .sort(function(sessionA, sessionB){
+                                    if(sessionA.startTime > sessionB.startTime) {
+                                        return -1;
+                                    } else if (sessionA.startTime < sessionB.startTime) {
+                                        return 1;
+                                    }
+
+                                    return 0;
+                                });
+
+                            var sessionMap = {};
+
+                            sessionList.map((session) => sessionMap[session.id] = session);
+
+
                             $scope.getTaskList(data.project.id);
                             $scope.selectedProject = data;
-                            $scope.selectedProject.totalSessionList = data.sessionList;
+                            $scope.selectedProject.totalSessionMap = sessionMap;
+                            $scope.selectedProject.sessionList = sessionList;
                             $scope.calculateTotalDisplayedHours();
                         } else {
                             $scope.projectList = {
