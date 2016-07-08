@@ -93,7 +93,7 @@ define(['app'], function(app)
                 currentSession    : {
                     id                  : null,
                     user_id             : null,
-                    procject_id         : null,
+                    project_id          : null,
                     timeDiff            : 0,
                     done                : 0,
                     sessionDescription  : '',
@@ -192,31 +192,6 @@ define(['app'], function(app)
             };
 
 
-            /**
-             *
-             * @param sessionId
-             */
-            $scope.resumeSession = function (sessionId)
-            {
-                if ($scope.selectedProject.currentSession && $scope.selectedProject.currentSession.id == sessionId) {
-                    return;
-                }
-
-                let currentElement;
-                let sessionList = $scope.selectedProject.sessionList;
-                for (var i in sessionList) {
-                    if (!sessionList.hasOwnProperty(i)) {
-                        continue;
-                    }
-
-                    currentElement = sessionList[i];
-                    if (currentElement.id == sessionId) {
-                        $scope.selectedProject.currentSession = currentElement;
-                        break;
-                    }
-                }
-            };
-
             $scope.saveSession = function(session) {
                 projectSession.save(
                     {
@@ -294,13 +269,16 @@ define(['app'], function(app)
             /**
              *
              */
-            $scope.startNewSession = function() {
+            $scope.startNewSession = function()
+            {
+                var selectedProject = $scope.selectedProject.project;
+                console.log(selectedProject);
                 projectSession.start(
                     {
                         'actionName' : 'start'
                     },
                     {
-                        'projectId' : $scope.selectedProject.project.id
+                        'projectId' : selectedProject.id
                     },
                     function (promise) {
                         if (!promise.response) {
@@ -365,6 +343,7 @@ define(['app'], function(app)
                         let timeString ='';
                         let currentElement;
                         let time;
+
                         for (let i in $scope.selectedProject.sessionList) {
                             currentElement = $scope.selectedProject.sessionList[i];
 
@@ -442,9 +421,8 @@ define(['app'], function(app)
 
                             sessionList.map((session) => sessionMap[session.id] = session);
 
-
                             $scope.getTaskList(data.project.id);
-                            $scope.selectedProject = data;
+                            $scope.selectedProject.project = data.project;
                             $scope.selectedProject.totalSessionMap = sessionMap;
                             $scope.selectedProject.sessionList = sessionList;
                             $scope.calculateTotalDisplayedHours();

@@ -6,7 +6,6 @@ use chilimatic\lib\Di\ClosureFactory;
 use chilimatic\lib\Transformer\Time\DateDiffToDecimalTime;
 use timetracker\app\module\main\controller\Application;
 use timetracker\app\module\session\model\Session;
-use timetracker\app\module\session\model\SessionDescription;
 use timetracker\app\module\session\service\SessionService;
 
 class Index extends Application
