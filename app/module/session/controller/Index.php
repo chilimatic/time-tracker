@@ -74,7 +74,52 @@ class Index extends Application
             $this->errorMessage('session-end-failed', _('Session could not be ended!'));
         }
     }
-    
+
+    public function deleteAction()
+    {
+        if (!$this->loadUserFromSession()) {
+            $this->errorMessage('login-needed', _('please login!'), null, ['logout' => true]);
+            return;
+        }
+
+        $request = ClosureFactory::getInstance()->get('request-handler', []);
+        if (!$request->getRaw()) {
+            $this->errorMessage('error', _('no request data'));
+            return;
+        }
+
+        $session =  $request->getRaw()->get('session', null, null);
+
+        if (!$session['id']) {
+            $this->errorMessage('session-end-failed', _('Session data is empty'));
+        }
+
+        /**
+         * @var EntityManager $em
+         */
+        $em = ClosureFactory::getInstance()->get('entity-manager');
+
+        /**
+         * @var Session $session
+         */
+        $session = $em->findOneBy(
+            new Session(),
+            [
+                'id' => (int) $session['id']
+            ]
+        );
+
+        if (!$session->getId()) {
+            $this->errorMessage('error', _('no session found'));
+            return;
+        }
+
+        if ($em->delete($session)) {
+            $this->successMessage('session-removed', _('Session successfully removed!'), null, ['session_id' => $session->getId()]);
+        } else {
+            $this->errorMessage('session-remove-failed', _('Session could not be removed!'));
+        }
+    }
     
 
     public function endAction()

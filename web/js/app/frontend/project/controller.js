@@ -30,7 +30,7 @@ define(['app'], function(app)
              * @type {{listView: boolean}}
              */
             $scope.setting = {
-                listView : false
+                listView : true
             };
             
             $rootScope.$on('login-error', function(event, param1) {
@@ -272,7 +272,6 @@ define(['app'], function(app)
             $scope.startNewSession = function()
             {
                 var selectedProject = $scope.selectedProject.project;
-                console.log(selectedProject);
                 projectSession.start(
                     {
                         'actionName' : 'start'
@@ -289,12 +288,41 @@ define(['app'], function(app)
 
                         if (data) {
                             $scope.currentSession = data;
-                            $scope.selectedProject.sessionList.push(data);
+                            $scope.selectedProject.sessionList.unshift(data);
                             $scope.selectedProject.totalSessionMap[$scope.currentSession.id] = data;
                         }
                     }
 
                 )
+            };
+
+            $scope.deleteSession = function(session) {
+
+                projectSession.deleteSession(
+                    {
+                        'actionName' : 'delete'
+                    },
+                    {
+                        'session' : session
+                    },
+                    function(promise) {
+                        if (!promise.response) {
+                            return;
+                        }
+
+                        var data = promise.response.data;
+                        let sessionList = $scope.selectedProject.sessionList;
+                        sessionList = sessionList.filter(function(session) {
+                            if (session.id == data.session_id) {
+                                return false;
+                            }
+                            return true;
+                        });
+
+                        $scope.selectedProject.sessionList = sessionList;
+                    }
+                );
+
             };
 
 

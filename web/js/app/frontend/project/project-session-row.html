@@ -34,6 +34,9 @@
             <button class="btn btn-danger stop-session" ng-click="endSession(session)" ng-if="!session.endTime || session.endTime == '0000-00-00 00:00:00'">
                 <i class="glyphicon glyphicon-stop"></i>
             </button>
+            <button class="btn btn-danger stop-session" ng-click="deleteSession(session)">
+                <i class="glyphicon glyphicon-remove"></i>
+            </button>
         </div>
         <div class="clearfix"></div>
     </div>

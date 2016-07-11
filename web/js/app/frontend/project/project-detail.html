@@ -30,7 +30,13 @@
                 ng-repeat="session in selectedProject.sessionList | filter : timeSearch"
                 class="col-lg-9"
         >
-            <session-row save-session="saveSession" end-session="endSession" session="session"></session-row>
+            <session-row
+                    delete-session="deleteSession"
+                    save-session="saveSession"
+                    end-session="endSession"
+                    session="session"
+            >
+            </session-row>
         </div>
         <div class="clearfix"></div>
         <button class="btn btn-success start-session-button" ng-click="startNewSession()">

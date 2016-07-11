@@ -452,7 +452,8 @@ define(['route', 'service/resolver'], function(routing, resolver)
                 'getUserStatistic'  : { method: 'GET', params : {'project_id' : null} },
                 'start'             : { method: 'POST'},
                 'end'               : { method: 'POST'},
-                'save'              : { method: 'POST'}
+                'save'              : { method: 'POST'},
+                'deleteSession'     : { method: 'POST', params: {'session' : null}}
             }
         );
     }]);

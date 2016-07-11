@@ -230,7 +230,7 @@ define(['app'], function(app) {
                             return false;
                         }
 
-                        project.delete(
+                        project.deleteSession(
                             {
                                 'actionName' : 'delete'
                             },
@@ -311,9 +311,10 @@ define(['app'], function(app) {
         return {
             restrict : 'E',
             scope : {
-                session : '=',
-                endSession : '=',
-                saveSession : '='
+                session         : '=',
+                endSession      : '=',
+                saveSession     : '=',
+                deleteSession   : '='
             },
             templateUrl : '/js/app/frontend/project/project-session-row.html',
             link : function(scope, element, attr)
