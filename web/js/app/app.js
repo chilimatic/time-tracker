@@ -28,6 +28,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
                 app.service = $provide.service;
 
                 $resourceProvider.defaults.stripTrailingSlashes = false;
+                $compileProvider.debugInfoEnabled(false);
 
                 $locationProvider.html5Mode({
                     enabled: true,

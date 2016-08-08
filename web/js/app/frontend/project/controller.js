@@ -130,6 +130,11 @@ define(['app'], function(app)
              */
             $scope.timeSearch = '';
 
+            /**
+             * @type {int}
+             */
+            $scope.startTime = (new Date('now')).getTime();
+
 
             $scope.timeFilter = function()
             {
@@ -291,9 +296,15 @@ define(['app'], function(app)
                             $scope.selectedProject.sessionList.unshift(data);
                             $scope.selectedProject.totalSessionMap[$scope.currentSession.id] = data;
                         }
+
+                        $scope.startSessionTimer(data.start);
                     }
 
                 )
+            };
+
+            $scope.startSessionTimer = function(startTime) {
+                $scope.startTime = Date.parse(startTime);
             };
 
             $scope.deleteSession = function(session) {

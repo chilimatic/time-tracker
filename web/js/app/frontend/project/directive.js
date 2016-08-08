@@ -82,6 +82,7 @@ DragAndDrop.addDropZone('.dropzone', dropConfiguration);
 
 
 define(['app'], function(app) {
+    
     app
         .directive('taskList', function() {
         return {
