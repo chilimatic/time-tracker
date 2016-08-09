@@ -3,7 +3,7 @@
 define(['app'], function(app)
 {
     app
-        .controller('loginController', ['$scope','$rootScope', '$location', 'login', 'user', function($scope, $rootScope, $location, login, user)
+        .controller('loginController', ['$scope','$rootScope', '$interval', '$location', 'login', 'user', function($scope, $rootScope, $interval, $location, login, user)
         {
             /**
              * @type {{email: string, password: string}}

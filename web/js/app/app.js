@@ -130,7 +130,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
     /**
      * login service
      */
-    app.service('login', ['$rootScope', '$location', 'session', 'user', 'sessionStorage', function($rootScope, $location, session, user, sessionStorage)
+    app.service('login', ['$rootScope', '$location', '$interval', 'session', 'user', 'sessionStorage', function($rootScope, $location, $interval, session, user, sessionStorage)
     {
         var login = {
             /**
@@ -146,12 +146,19 @@ define(['route', 'service/resolver'], function(routing, resolver)
              */
             session : null,
 
+            checkLoggedIn : false,
+
             /**
              * method that checks if a user is logged in on the server side
              */
             loggedIn : function ()
             {
                 var that = this;
+
+                if (!this.getUser()) {
+                    return;
+                }
+
                 this.getUser().loggedIn(
                     {
                         controllerName  : 'user',
@@ -195,6 +202,8 @@ define(['route', 'service/resolver'], function(routing, resolver)
                 }
 
                 var that = this;
+
+
                 this.getUser().login(
                     {
                         controllerName    : 'user',
@@ -217,7 +226,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
                         }
 
                         if (promise.response.error) {
-
+                            $interval.cancel(that.checkLoggedIn);
                             that.logOut();
                             return;
                         }
@@ -230,6 +239,11 @@ define(['route', 'service/resolver'], function(routing, resolver)
                             sessionStorage.setItem('userData', JSON.stringify(promise.response.user));
                             $rootScope.$emit('loggedIn');
                             $location.url('/project');
+
+                            that.checkLoggedIn = $interval(
+                                that.loggedIn.bind(that),
+                                30000
+                            )
                         }
 
                     }.bind(that)
@@ -261,6 +275,7 @@ define(['route', 'service/resolver'], function(routing, resolver)
                         that.getSession().destroy();
                         that.destroyLocalSessionData();
                         $rootScope.$emit('loggedOut');
+                        $interval.cancel(that.checkLoggedIn);
                         $location.url('/login');
                     }.bind(that)
                 );
