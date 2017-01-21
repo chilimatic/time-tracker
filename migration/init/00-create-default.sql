@@ -1,9 +1,11 @@
 -- create the database on the system
-CREATE DATABASE `time-tracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE `time_tracker` /*!40100 DEFAULT CHARACTER SET utf8 */;
 -- create the user
 CREATE user 'time-tracker'@'localhost' IDENTIFIED BY 'Aef8naelWohGho4lAecu9chaOoHu3soh';
 -- give the user permission to the necessary actions on the database
-GRANT SELECT,INSERT, UPDATE, DELETE ON `time_tracker`.* to 'time-tracker'@'localhost';
+GRANT SELECT,INSERT, UPDATE, DELETE, CREATE, ALTER ON `time_tracker`.* to 'time-tracker'@'localhost';
+
+use `time_tracker`;
 
 -- user table
 CREATE TABLE IF NOT EXISTS `user` (
@@ -24,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `project` (
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `time-tracker`.`session` (
+CREATE TABLE IF NOT EXISTS `session` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT UNSIGNED NULL,
   `project_id` INT UNSIGNED NOT NULL,

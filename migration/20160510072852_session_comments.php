@@ -24,6 +24,8 @@ class SessionComments extends AbstractMigration
      *
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function change()
     {
